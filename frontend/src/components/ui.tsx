@@ -31,7 +31,7 @@ const DIFF: Record<string, { dot: string; text: string }> = {
 export function DifficultyBadge({ level }: { level: string }) {
   const d = DIFF[level] ?? { dot: 'bg-slate-muted', text: 'text-slate-muted' }
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-2 py-0.5 text-xs font-medium ${d.text}`}>
+    <span className={`inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-2 py-0.5 text-xs font-medium ${d.text}`}>
       <span className={`h-1.5 w-1.5 rounded-full ${d.dot}`} aria-hidden />{level}
     </span>
   )
@@ -67,7 +67,7 @@ export function StatusDot({ status }: { status: Status }) {
     <svg role="img" aria-label={STATUS_LABEL[status]} width="18" height="18" viewBox="0 0 18 18" className="shrink-0">
       <title>{STATUS_LABEL[status]}</title>
       {status === 'completed' ? (
-        <><circle cx="9" cy="9" r="8" fill="var(--color-ok)" /><path d="M5.2 9.2l2.6 2.6 5-5.2" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></>
+        <><circle cx="9" cy="9" r="8" fill="var(--color-ok)" /><path d="M5.2 9.2l2.6 2.6 5-5.2" fill="none" stroke="var(--color-paper)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></>
       ) : status === 'in_progress' ? (
         <><circle cx="9" cy="9" r="7.5" fill="none" stroke="var(--color-copper)" strokeWidth="1.6" /><path d="M9 1.5a7.5 7.5 0 0 1 0 15z" fill="var(--color-copper)" /></>
       ) : (
@@ -78,15 +78,14 @@ export function StatusDot({ status }: { status: Status }) {
 }
 export const statusLabel = (s: Status) => STATUS_LABEL[s]
 
-/** The LogicPath mark. On navy backgrounds the navy half of the mark would vanish, so it sits on a white tile there. */
-export function Logo({ size = 28, onDark = false }: { size?: number; onDark?: boolean }) {
+/** The LogicPath mark. The interface is dark, so the navy half of the mark would vanish: it always sits on a white tile. */
+export function Logo({ size = 28 }: { size?: number; onDark?: boolean }) {
   const img = <img src="/logo-mark.png" alt="" aria-hidden width={size} height={size} className="block object-contain" draggable={false} />
-  if (!onDark) return img
   return <span className="grid place-items-center rounded-lg bg-white" style={{ width: size + 8, height: size + 8 }}>{img}</span>
 }
 
 export function Wordmark({ onDark = false, className = '' }: { onDark?: boolean; className?: string }) {
   return <span className={`font-display font-semibold tracking-tight ${className}`}>
-    <span className={onDark ? 'text-white' : 'text-navy'}>Logic</span><span className={onDark ? 'text-copper-100' : 'text-copper-600'}>Path</span>
+    <span className={onDark ? 'text-white' : 'text-ink'}>Logic</span><span className={onDark ? 'text-copper-100' : 'text-copper-600'}>Path</span>
   </span>
 }

@@ -27,7 +27,7 @@ export function CustomCasesPanel({ problem, custom, busy, onVisualize }: { probl
   const field = (key: string, label: string, hint: string, value: string, set: (v: string) => void, example: unknown, required: boolean) => (
     <div key={key}>
       <label className="flex flex-col gap-1 text-xs font-medium text-slate-muted">
-        <span><span className="font-mono text-navy">{label}</span> <span className="font-normal">{hint}{required ? '' : ' (optional)'}</span></span>
+        <span><span className="font-mono text-ink">{label}</span> <span className="font-normal">{hint}{required ? '' : ' (optional)'}</span></span>
         <input className="input !py-1.5 font-mono" value={value} onChange={(e) => set(e.target.value)} placeholder={example === undefined ? '' : short(example)}
           aria-invalid={errors[key] ? true : undefined} aria-describedby={errors[key] ? `custom-err-${key}` : undefined} spellCheck={false} autoComplete="off" />
       </label>
@@ -37,7 +37,7 @@ export function CustomCasesPanel({ problem, custom, busy, onVisualize }: { probl
 
   return (
     <div className="space-y-3 p-4 text-sm" data-testid="custom-cases">
-      <p className="rounded-lg border border-copper/25 bg-copper-50 px-3 py-2 text-xs text-navy/80">
+      <p className="rounded-lg border border-copper/25 bg-copper-50 px-3 py-2 text-xs text-ink/80">
         Experimental. These cases run only in your browser, are not saved, and do not count toward your progress.
       </p>
 
@@ -54,7 +54,7 @@ export function CustomCasesPanel({ problem, custom, busy, onVisualize }: { probl
         </div>
       </form>
 
-      {custom.notice && <pre role="alert" className="overflow-x-auto whitespace-pre-wrap rounded-lg border border-bad/25 bg-white p-3 font-mono text-xs text-bad">{custom.notice}</pre>}
+      {custom.notice && <pre role="alert" className="overflow-x-auto whitespace-pre-wrap rounded-lg border border-bad/25 bg-surface p-3 font-mono text-xs text-bad">{custom.notice}</pre>}
 
       {custom.cases.length > 0 && (
         <div className="space-y-2">
@@ -65,9 +65,9 @@ export function CustomCasesPanel({ problem, custom, busy, onVisualize }: { probl
           {custom.cases.map((t) => {
             const r = custom.results[t.id]
             return (
-              <div key={t.id} className="rounded-lg border border-line bg-white p-3" data-testid={`custom-${-t.id}`}>
+              <div key={t.id} className="rounded-lg border border-line bg-surface p-3" data-testid={`custom-${-t.id}`}>
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-xs font-semibold text-navy">{t.label}</span>
+                  <span className="text-xs font-semibold text-ink">{t.label}</span>
                   <span className="flex gap-1.5">
                     <button className="btn-ghost !px-2.5 !py-1 text-xs" onClick={() => void custom.run([t.id])} disabled={disabled}>Run</button>
                     <button className="btn-ghost !px-2.5 !py-1 text-xs" onClick={() => onVisualize(t.id)} disabled={disabled}>Visualize</button>

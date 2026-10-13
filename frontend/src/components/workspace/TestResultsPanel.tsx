@@ -69,9 +69,9 @@ export function TestResultsPanel({ result, running, notice, runtime, constraints
       {tooSlow && (
         <div data-testid="speed-nudge" className="rounded-lg border border-copper/30 bg-copper-50 px-3.5 py-3 leading-relaxed">
           <p className="font-semibold">Correct on the small tests, but not fast enough for the largest inputs.</p>
-          <p className="mt-1 text-navy/80">The remaining tests use inputs as large as the constraints allow. How many steps does your approach take when the input is that big?</p>
+          <p className="mt-1 text-ink/80">The remaining tests use inputs as large as the constraints allow. How many steps does your approach take when the input is that big?</p>
           {constraints.length > 0 && (
-            <ul className="mt-2 list-disc space-y-0.5 pl-5 text-xs text-navy/80 marker:text-copper" aria-label="Constraints">
+            <ul className="mt-2 list-disc space-y-0.5 pl-5 text-xs text-ink/80 marker:text-copper" aria-label="Constraints">
               {constraints.map((c, i) => <li key={i}><RichText text={c} className="inline" /></li>)}
             </ul>
           )}
@@ -79,7 +79,7 @@ export function TestResultsPanel({ result, running, notice, runtime, constraints
       )}
 
       {notice && <p role="alert" className="rounded-lg border border-warn/25 bg-warn-50 px-3 py-2 text-warn">{notice}</p>}
-      {result.error && <pre role="alert" className="overflow-x-auto whitespace-pre-wrap rounded-lg border border-bad/25 bg-white p-3 font-mono text-xs leading-relaxed text-bad">{result.error}</pre>}
+      {result.error && <pre role="alert" className="overflow-x-auto whitespace-pre-wrap rounded-lg border border-bad/25 bg-surface p-3 font-mono text-xs leading-relaxed text-bad">{result.error}</pre>}
 
       {result.cases.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-line">

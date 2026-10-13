@@ -41,7 +41,7 @@ export function Stepper({ index, total, playing, speed, onIndex, onPlaying, onSp
         onChange={(e) => { onPlaying(false); onIndex(Number(e.target.value)) }} className="min-w-24 flex-1 accent-copper" />
       <span className="text-xs tabular-nums text-slate-muted" data-testid="step-counter">Step {total ? index + 1 : 0} of {total}{label ? ` · ${label}` : ''}</span>
       <label className="flex items-center gap-1 text-xs text-slate-muted">Speed
-        <select value={speed} onChange={(e) => onSpeed(Number(e.target.value))} className="rounded border border-line bg-white px-1 py-0.5">
+        <select value={speed} onChange={(e) => onSpeed(Number(e.target.value))} className="rounded border border-line bg-surface px-1 py-0.5">
           {SPEEDS.map((s) => <option key={s} value={s}>{s}×</option>)}
         </select>
       </label>

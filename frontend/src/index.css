@@ -1,25 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  /* Palette (brief): deep navy, copper, white, warm off-white, muted slate. Tints are derived from these. */
+  /* Palette (brief): deep navy, copper, white, warm off-white, muted slate. The interface is dark: the page is a navy-black, panels are
+     the brand navy lifted a step, and the brand off-white is the text. Names keep their roles (paper = page, surface = panels, ink = text). */
   --color-navy: #11233b;
   --color-navy-800: #172c47;
   --color-navy-700: #1f3a5c;
-  --color-navy-100: #dfe5ee;
-  --color-navy-50: #eef1f6;
+  --color-navy-100: #2b4468;
+  --color-navy-50: #172a45;
   --color-copper: #b8734d;
-  --color-copper-600: #a2623f;
+  --color-copper-700: #a2623f;
+  --color-copper-600: #e0a683;
   --color-copper-100: #f0dccf;
-  --color-copper-50: #f8efe9;
-  --color-paper: #f7f6f3;
-  --color-slate-muted: #64748b;
-  --color-line: #e6e3dc;
-  --color-ok: #2f7d5b;
-  --color-ok-50: #eaf5ef;
-  --color-warn: #a16207;
-  --color-warn-50: #fdf6e3;
-  --color-bad: #b42318;
-  --color-bad-50: #fdecea;
+  --color-copper-50: rgb(184 115 77 / 0.15);
+  --color-paper: #0a1424;
+  --color-surface: #101f35;
+  --color-ink: #e9edf3;
+  --color-slate-muted: #93a1b5;
+  --color-line: #233755;
+  --color-ok: #5cc59b;
+  --color-ok-50: rgb(47 125 91 / 0.2);
+  --color-warn: #e3b04b;
+  --color-warn-50: rgb(161 98 7 / 0.22);
+  --color-bad: #f2877a;
+  --color-bad-50: rgb(180 35 24 / 0.22);
 
   /* Sans carries the interface; the serif is reserved for the tutor's voice so it is always clear who is speaking. */
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -27,18 +31,19 @@
   --font-voice: "Newsreader", ui-serif, Georgia, serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
-  --shadow-card: 0 1px 2px rgb(17 35 59 / 0.04), 0 1px 1px rgb(17 35 59 / 0.03);
-  --shadow-raise: 0 4px 14px rgb(17 35 59 / 0.08), 0 1px 3px rgb(17 35 59 / 0.06);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.25), 0 1px 1px rgb(0 0 0 / 0.2);
+  --shadow-raise: 0 8px 24px rgb(0 0 0 / 0.35), 0 1px 3px rgb(0 0 0 / 0.3);
 }
 
+html { color-scheme: dark; }
 html, body, #root { height: 100%; }
 body {
   background: var(--color-paper);
-  color: var(--color-navy);
+  color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
-::selection { background: var(--color-copper-100); }
+::selection { background: rgb(184 115 77 / 0.4); }
 h1, h2, h3 { text-wrap: balance; font-family: var(--font-display); letter-spacing: -0.012em; }
 h1 { letter-spacing: -0.022em; }
 html { scroll-behavior: smooth; }
@@ -46,11 +51,11 @@ html { scroll-behavior: smooth; }
 :focus-visible { outline: 2px solid var(--color-copper); outline-offset: 2px; border-radius: 4px; }
 
 @utility btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium transition-[background-color,border-color,box-shadow,opacity,transform] duration-150 active:translate-y-px motion-reduce:transition-none disabled:cursor-not-allowed disabled:opacity-50; }
-@utility btn-primary { @apply btn bg-navy text-white shadow-card hover:bg-navy-700 active:bg-navy-800; }
-@utility btn-accent { @apply btn bg-copper text-white shadow-card hover:bg-copper-600 active:bg-copper-600; }
-@utility btn-ghost { @apply btn border border-line bg-white text-navy shadow-card hover:border-navy-100 hover:bg-navy-50; }
-@utility input { @apply w-full rounded-lg border border-line bg-white px-3 py-2 text-sm text-navy shadow-card placeholder:text-slate-muted/80 focus:border-copper focus:outline-none focus:ring-2 focus:ring-copper/20; }
-@utility card { @apply rounded-lg border border-line bg-white shadow-card; }
+@utility btn-primary { @apply btn bg-ink text-navy shadow-card hover:bg-white active:bg-navy-100; }
+@utility btn-accent { @apply btn bg-copper text-white shadow-card hover:bg-copper-700 active:bg-copper-700; }
+@utility btn-ghost { @apply btn border border-line bg-surface text-ink shadow-card hover:border-navy-100 hover:bg-navy-50; }
+@utility input { @apply w-full rounded-lg border border-navy-100 bg-paper px-3 py-2 text-sm text-ink shadow-card placeholder:text-slate-muted/80 focus:border-copper focus:outline-none focus:ring-2 focus:ring-copper/20; }
+@utility card { @apply rounded-lg border border-line bg-surface shadow-card; }
 @utility label { @apply mb-1.5 block text-xs font-medium text-slate-muted; }
 @utility kbd { @apply rounded border border-line bg-paper px-1.5 py-0.5 font-mono text-[10px] font-medium text-slate-muted; }
 @utility eyebrow { @apply text-sm font-medium text-copper-600; }
@@ -63,7 +68,7 @@ html { scroll-behavior: smooth; }
 
 @keyframes shimmer { 100% { transform: translateX(100%); } }
 .skeleton { position: relative; overflow: hidden; background: var(--color-navy-50); border-radius: 8px; }
-.skeleton::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.7), transparent); animation: shimmer 1.4s infinite; }
+.skeleton::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.06), transparent); animation: shimmer 1.4s infinite; }
 @media (prefers-reduced-motion: reduce) { .skeleton::after { animation: none; } }
 
 /* The tutor speaks in a serif so its questions stand apart from interface text. */
@@ -73,7 +78,7 @@ html { scroll-behavior: smooth; }
 /* Motion: used once, on the landing hero (headline, then the example session plays in order), and for answers to an action. */
 @keyframes reveal-word { from { opacity: 0; filter: blur(8px); transform: translateY(0.3em); } to { opacity: 1; filter: blur(0); transform: none; } }
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-@keyframes flag { 0%, 100% { background-color: transparent; } 35% { background-color: rgb(242 184 174 / 0.22); } }
+@keyframes flag { 0%, 100% { background-color: transparent; } 35% { background-color: rgb(242 135 122 / 0.22); } }
 @keyframes draw-rule { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 .reveal-word { display: inline-block; opacity: 0; animation: reveal-word 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; animation-delay: calc(var(--i, 0) * 70ms); }
 .rise { opacity: 0; animation: rise 0.45s ease-out forwards; animation-delay: var(--d, 0ms); }

@@ -37,8 +37,8 @@ export function GraphView({ value, nodeCount, adjacency, current, visited }: { v
             return (
               <g key={i} data-node={i} data-state={isHere ? 'current' : isSeen ? 'visited' : 'idle'}>
                 <circle cx={p.x} cy={p.y} r={NODE_R} strokeWidth={isHere ? 3 : 1.5}
-                  className={`transition-colors duration-300 motion-reduce:transition-none ${isHere ? 'fill-copper-100 stroke-copper' : isSeen ? 'fill-copper-50 stroke-navy' : 'fill-white stroke-navy'}`} />
-                <text x={p.x} y={p.y + 4} textAnchor="middle" className="fill-navy font-mono text-[12px]">{i}</text>
+                  className={`transition-colors duration-300 motion-reduce:transition-none ${isHere ? 'fill-copper-50 stroke-copper' : isSeen ? 'fill-copper-50 stroke-navy' : 'fill-surface stroke-navy'}`} />
+                <text x={p.x} y={p.y + 4} textAnchor="middle" className="fill-ink font-mono text-[12px]">{i}</text>
               </g>
             )
           })}

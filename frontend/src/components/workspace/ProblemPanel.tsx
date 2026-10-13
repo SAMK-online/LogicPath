@@ -13,14 +13,14 @@ export function ProblemPanel({ problem }: { problem: Problem }) {
       </div>
       <p className="sr-only">Topic: {problem.topic}</p>
 
-      <RichText className="mt-4 text-[15px] leading-relaxed text-navy/90" text={problem.description} />
+      <RichText className="mt-4 text-[15px] leading-relaxed text-ink/90" text={problem.description} />
 
       <h2 className="label mt-7">Function to implement</h2>
       <pre className="overflow-x-auto whitespace-pre-wrap break-words rounded-lg border border-line bg-paper p-3 font-mono text-xs leading-relaxed">
         {`def ${sig.name}(${sig.params.map((p) => `${p.name}: ${p.type}`).join(', ')}) -> ${sig.return_type}`}
       </pre>
       <p className="mt-2 text-xs leading-relaxed text-slate-muted">
-        <strong className="font-semibold text-navy/80">Input:</strong> {sig.params.map((p) => `${p.name} (${p.type})`).join(', ')}. <strong className="font-semibold text-navy/80">Output:</strong> {sig.return_type}.
+        <strong className="font-semibold text-ink/80">Input:</strong> {sig.params.map((p) => `${p.name} (${p.type})`).join(', ')}. <strong className="font-semibold text-ink/80">Output:</strong> {sig.return_type}.
         Return the answer; don't print it.
       </p>
 
@@ -49,7 +49,7 @@ export function ProblemPanel({ problem }: { problem: Problem }) {
             {problem.constraints.map((c, i) => <li key={i}><RichText text={c} className="inline" /></li>)}
           </ul>
           {problem.test_cases.some((t) => t.perf) && (
-            <p data-testid="perf-note" className="mt-3 rounded-lg border border-copper/25 bg-copper-50 px-3 py-2 text-xs leading-relaxed text-navy/80">
+            <p data-testid="perf-note" className="mt-3 rounded-lg border border-copper/25 bg-copper-50 px-3 py-2 text-xs leading-relaxed text-ink/80">
               The constraints are real: some tests use inputs as large as they allow, and every one has a time limit. A solution that is correct but slow will not pass them.
             </p>
           )}

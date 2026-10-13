@@ -65,9 +65,9 @@ export function ArrayView({ value, prev, pointers = [], prevPointers, asString =
             {cells.map((it, i) => (
               <g key={i} role="listitem" aria-label={`index ${i}: ${fmt(it)}`} data-changed={changed.has(i) ? 'true' : 'false'}>
                 <rect x={i * pitch} y={0} width={cellW} height={CELL_H} rx={5}
-                  className={`transition-colors duration-300 motion-reduce:transition-none ${changed.has(i) ? 'fill-copper-50 stroke-copper' : 'fill-white stroke-line'}`}
-                  strokeWidth={changed.has(i) || withPointer.has(i) ? 2 : 1} style={withPointer.has(i) && !changed.has(i) ? { stroke: 'var(--color-navy)' } : undefined} />
-                <text x={cx(i)} y={CELL_H / 2 + 5} textAnchor="middle" className={`fill-navy font-mono text-[14px] ${changed.has(i) ? 'font-semibold' : ''}`}>{text(it)}</text>
+                  className={`transition-colors duration-300 motion-reduce:transition-none ${changed.has(i) ? 'fill-copper-50 stroke-copper' : 'fill-surface stroke-line'}`}
+                  strokeWidth={changed.has(i) || withPointer.has(i) ? 2 : 1} style={withPointer.has(i) && !changed.has(i) ? { stroke: 'var(--color-ink)' } : undefined} />
+                <text x={cx(i)} y={CELL_H / 2 + 5} textAnchor="middle" className={`fill-ink font-mono text-[14px] ${changed.has(i) ? 'font-semibold' : ''}`}>{text(it)}</text>
                 <text x={cx(i)} y={CELL_H + 14} textAnchor="middle" className="fill-slate-muted text-[10px]">{i}</text>
               </g>
             ))}

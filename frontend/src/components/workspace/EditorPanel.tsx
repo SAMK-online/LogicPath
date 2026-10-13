@@ -7,26 +7,27 @@ const SAVE_LABEL: Record<SaveState, string> = { saved: 'All changes saved', dirt
 const mac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform)
 const MOD = mac ? '⌘' : 'Ctrl'
 
-/** Light editor theme tuned to the app palette: copper keywords, quiet comments, warm active line. */
+/** Dark editor theme tuned to the app palette: copper keywords, quiet comments, a slightly lifted active line. */
 const defineTheme: BeforeMount = (monaco) => {
   monaco.editor.defineTheme('socratic', {
-    base: 'vs', inherit: true,
+    base: 'vs-dark', inherit: true,
     rules: [
-      { token: 'keyword', foreground: 'A2623F', fontStyle: 'bold' },
-      { token: 'comment', foreground: '94A3B8', fontStyle: 'italic' },
-      { token: 'string', foreground: '2F7D5B' },
-      { token: 'number', foreground: '1F3A5C' },
-      { token: 'identifier', foreground: '11233B' },
-      { token: 'type.identifier', foreground: '1F3A5C' },
-      { token: 'delimiter', foreground: '64748B' },
+      { token: 'keyword', foreground: 'E3A98A', fontStyle: 'bold' },
+      { token: 'comment', foreground: '6B7F9C', fontStyle: 'italic' },
+      { token: 'string', foreground: '7FD1AE' },
+      { token: 'number', foreground: 'A9C4E4' },
+      { token: 'identifier', foreground: 'E9EDF3' },
+      { token: 'type.identifier', foreground: 'A9C4E4' },
+      { token: 'delimiter', foreground: '93A1B5' },
     ],
     colors: {
-      'editor.background': '#FFFFFF', 'editor.foreground': '#11233B',
-      'editorLineNumber.foreground': '#B6BFCC', 'editorLineNumber.activeForeground': '#11233B',
-      'editor.lineHighlightBackground': '#F7F6F3', 'editor.lineHighlightBorder': '#F7F6F3',
-      'editorCursor.foreground': '#B8734D', 'editor.selectionBackground': '#F0DCCF', 'editor.inactiveSelectionBackground': '#F7ECE4',
-      'editorIndentGuide.background1': '#EFEDE8', 'editorIndentGuide.activeBackground1': '#D8D4CA',
-      'editorBracketMatch.background': '#F0DCCF', 'editorBracketMatch.border': '#B8734D',
+      'editor.background': '#101F35', 'editor.foreground': '#E9EDF3',
+      'editorLineNumber.foreground': '#4F6384', 'editorLineNumber.activeForeground': '#E9EDF3',
+      'editor.lineHighlightBackground': '#16294A', 'editor.lineHighlightBorder': '#16294A',
+      'editorCursor.foreground': '#E3A98A', 'editor.selectionBackground': '#B8734D55', 'editor.inactiveSelectionBackground': '#B8734D2E',
+      'editorIndentGuide.background1': '#1B2F4D', 'editorIndentGuide.activeBackground1': '#2B4468',
+      'editorBracketMatch.background': '#B8734D40', 'editorBracketMatch.border': '#B8734D',
+      'editorWidget.background': '#0A1424', 'editorSuggestWidget.background': '#0A1424',
     },
   })
 }
@@ -73,8 +74,8 @@ export function EditorPanel({ code, onChange, onSave, onRun, saveState, running,
 
   const tone = saveState === 'dirty' ? 'text-copper-600' : saveState === 'error' ? 'text-bad' : 'text-slate-muted'
   return (
-    <div className="flex h-full min-h-0 flex-col bg-white">
-      <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-line bg-white px-3 py-2">
+    <div className="flex h-full min-h-0 flex-col bg-surface">
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-line bg-surface px-3 py-2">
         <div className="flex items-center gap-2">
           <span className="mr-1 hidden items-center gap-1.5 rounded-md bg-paper px-2.5 py-1 font-mono text-xs text-slate-muted sm:flex">
             <span aria-hidden className="h-2 w-2 rounded-full bg-copper" />solution.py

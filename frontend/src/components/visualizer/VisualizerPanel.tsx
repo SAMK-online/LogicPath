@@ -123,7 +123,7 @@ export default function VisualizerPanel({ problem, code, savedCode, sessionId, r
 
   const tab = (m: Mode, label: string) => (
     <button role="tab" aria-selected={mode === m} onClick={() => { setMode(m); setPlaying(false) }}
-      className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${mode === m ? 'bg-white text-navy shadow-card' : 'text-slate-muted hover:text-navy'}`}>{label}</button>
+      className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${mode === m ? 'bg-surface text-ink shadow-card' : 'text-slate-muted hover:text-ink'}`}>{label}</button>
   )
   const prevStep = index > 0 ? trace?.steps[index - 1] : undefined
 
@@ -132,7 +132,7 @@ export default function VisualizerPanel({ problem, code, savedCode, sessionId, r
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div role="tablist" aria-label="Visualizer mode" className="flex gap-0.5 rounded-lg bg-paper p-0.5">{tab('case', 'Test case')}{tab('trace', 'Step through my code')}</div>
         <label className="flex items-center gap-2 text-xs text-slate-muted">Test case
-          <select value={test.id} onChange={(e) => selectTest(Number(e.target.value))} className="rounded-md border border-line bg-white px-2 py-1 text-sm text-navy">
+          <select value={test.id} onChange={(e) => selectTest(Number(e.target.value))} className="rounded-md border border-line bg-surface px-2 py-1 text-sm text-ink">
             {drawable.map((t) => <option key={t.id} value={t.id}>{caseName(t)}</option>)}
           </select>
         </label>

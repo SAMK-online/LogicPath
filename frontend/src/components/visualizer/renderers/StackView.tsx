@@ -8,7 +8,7 @@ export function StackView({ value }: { value: Snap }) {
   return (
     <div className="inline-flex flex-col" role="list" aria-label={`stack with ${value.n} items, top first`}>
       {items.map((it, i) => (
-        <div key={i} role="listitem" className={`flex items-center gap-2 border border-line px-4 py-1 font-mono text-sm ${i === 0 ? 'border-copper bg-copper-50' : 'bg-white'} ${i > 0 ? '-mt-px' : ''}`}>
+        <div key={i} role="listitem" className={`flex items-center gap-2 border border-line px-4 py-1 font-mono text-sm ${i === 0 ? 'border-copper bg-copper-50' : 'bg-surface'} ${i > 0 ? '-mt-px' : ''}`}>
           <span>{fmt(it, 20)}</span>
           {i === 0 && <span className="text-[10px] font-semibold uppercase text-copper">top</span>}
         </div>

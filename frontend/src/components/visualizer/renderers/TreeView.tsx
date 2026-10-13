@@ -44,11 +44,11 @@ export function TreeView({ value }: { value: Snap }) {
   const cx = (n: Node) => n.x * DX + DX / 2 + 5, cy = (n: Node) => n.depth * DY + R + 5
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`binary tree with ${nodes.length} nodes: ${fmt(value, 80)}`} className="max-w-full overflow-visible">
-      {edges.map(([a, b], i) => <line key={i} x1={cx(a)} y1={cy(a)} x2={cx(b)} y2={cy(b)} stroke="#64748B" strokeWidth="1.5" />)}
+      {edges.map(([a, b], i) => <line key={i} x1={cx(a)} y1={cy(a)} x2={cx(b)} y2={cy(b)} stroke="var(--color-slate-muted)" strokeOpacity={0.7} strokeWidth="1.5" />)}
       {nodes.map((n) => (
         <g key={n.id}>
-          <circle cx={cx(n)} cy={cy(n)} r={R} fill={n === root ? '#F8EFE9' : '#fff'} stroke="#11233B" strokeWidth="1.5" />
-          <text x={cx(n)} y={cy(n) + 4} textAnchor="middle" fontSize="12" fontFamily="ui-monospace, monospace" fill="#11233B">{n.label}</text>
+          <circle cx={cx(n)} cy={cy(n)} r={R} className={n === root ? 'fill-copper-50 stroke-copper' : 'fill-surface stroke-slate-muted'} strokeWidth="1.5" />
+          <text x={cx(n)} y={cy(n) + 4} textAnchor="middle" fontSize="12" fontFamily="ui-monospace, monospace" className="fill-ink">{n.label}</text>
         </g>
       ))}
     </svg>

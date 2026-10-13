@@ -26,7 +26,7 @@ export function RichText({ text, className = '' }: { text: string; className?: s
       i++
       while (i < lines.length && !lines[i].trim().startsWith('```')) code.push(lines[i++])
       i++
-      blocks.push(<pre key={key++} className="my-2 overflow-x-auto rounded-md bg-navy p-3 font-mono text-xs text-white"><code>{code.join('\n')}</code></pre>)
+      blocks.push(<pre key={key++} className="my-2 overflow-x-auto rounded-md border border-line bg-paper p-3 font-mono text-xs text-ink"><code>{code.join('\n')}</code></pre>)
     } else if (/^\s*[-*]\s+/.test(line)) {
       const items: string[] = []
       while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) items.push(lines[i++].replace(/^\s*[-*]\s+/, ''))

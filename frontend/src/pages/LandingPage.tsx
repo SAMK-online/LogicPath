@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ContainerScroll } from '../components/ContainerScroll'
 import { Logo, Wordmark } from '../components/ui'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -89,15 +90,15 @@ export function LandingPage() {
   const { user } = useAuth()
   const [hintsRef, hintsSeen] = useInView<HTMLOListElement>()
   return (
-    <div className="min-h-screen bg-white text-navy">
-      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-2">Skip to content</a>
-      <header className="border-b border-line bg-white">
+    <div className="min-h-screen bg-surface text-ink">
+      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-50 focus:rounded focus:bg-surface focus:px-3 focus:py-2">Skip to content</a>
+      <header className="border-b border-line bg-surface">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link to="/" aria-label="LogicPath" className="flex items-center gap-2.5 font-display text-[17px] font-semibold tracking-tight"><Logo size={34} /><Wordmark className="hidden whitespace-nowrap sm:inline" /></Link>
           <nav aria-label="Page" className="hidden items-center gap-6 text-sm text-slate-muted md:flex">
-            <a className="hover:text-navy" href="#how">How it works</a>
-            <a className="hover:text-navy" href="#roadmaps">Roadmaps</a>
-            <a className="hover:text-navy" href="#limits">Limits</a>
+            <a className="hover:text-ink" href="#how">How it works</a>
+            <a className="hover:text-ink" href="#roadmaps">Roadmaps</a>
+            <a className="hover:text-ink" href="#limits">Limits</a>
           </nav>
           <div className="flex items-center gap-2">
             {user ? <Link className="btn-primary" to="/dashboard">Open dashboard</Link> : <>
@@ -130,11 +131,25 @@ export function LandingPage() {
           </div>
         </section>
 
+        <section aria-labelledby="workspace-heading" className="overflow-hidden bg-paper">
+          <ContainerScroll
+            titleComponent={
+              <>
+                <h2 id="workspace-heading" className="font-display text-3xl font-semibold sm:text-5xl">Your code, the tests and the tutor in one workspace</h2>
+                <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-slate-muted">Write Python on the left, see every test result under it, and ask the tutor on the right. The visualizer steps through your own code.</p>
+              </>
+            }
+          >
+            <img src="/workspace-preview.jpg" alt="The LogicPath workspace: the problem on the left, a code editor with its test results below it, and the tutor panel on the right" width={1600} height={1000}
+              className="mx-auto h-full w-full rounded-xl object-cover object-left-top" draggable={false} loading="lazy" />
+          </ContainerScroll>
+        </section>
+
         <section id="how" className="mx-auto max-w-6xl scroll-mt-4 px-4 py-20 sm:px-6">
           <h2 className="max-w-xl font-display text-3xl font-semibold">How a session works</h2>
           <ol className="mt-10 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
             {STEPS.map(([h, p], i) => (
-              <li key={h} className="border-t-2 border-navy pt-4">
+              <li key={h} className="border-t-2 border-copper pt-4">
                 <p className="text-sm tabular-nums text-slate-muted">Step {i + 1}</p>
                 <h3 className="mt-1 font-display text-lg font-semibold">{h}</h3>
                 <p className="mt-2 text-[15px] leading-relaxed text-slate-muted">{p}</p>
@@ -154,10 +169,10 @@ export function LandingPage() {
                 There is also a visualizer. Pick a test case and step through your code line by line, watching variables, lists and dictionaries change.
               </p>
             </div>
-            <ol ref={hintsRef} className="divide-y divide-line border-y border-line bg-white">
+            <ol ref={hintsRef} className="divide-y divide-line border-y border-line bg-surface">
               {HINTS.map(([h, ex], i) => (
                 <li key={h} className="flex gap-4 px-4 py-4">
-                  <span className={`mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full border text-xs font-medium tabular-nums transition-colors duration-500 motion-reduce:transition-none ${hintsSeen ? 'border-navy bg-navy text-white' : 'border-line bg-white text-slate-muted'}`} style={{ transitionDelay: `${i * 220}ms` }} aria-label={`Level ${i + 1}`}>{i + 1}</span>
+                  <span className={`mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full border text-xs font-medium tabular-nums transition-colors duration-500 motion-reduce:transition-none ${hintsSeen ? 'border-copper bg-copper text-white' : 'border-line bg-surface text-slate-muted'}`} style={{ transitionDelay: `${i * 220}ms` }} aria-label={`Level ${i + 1}`}>{i + 1}</span>
                   <div>
                     <p className="font-medium">{h}</p>
                     <p className="tutor-voice mt-0.5 italic text-slate-muted">{ex}</p>
@@ -192,7 +207,7 @@ export function LandingPage() {
         <section id="roadmaps" className="scroll-mt-4 border-y border-line bg-paper">
           <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
             <h2 className="font-display text-3xl font-semibold">Three roadmaps</h2>
-            <ul className="mt-8 divide-y divide-line border-y border-line bg-white">
+            <ul className="mt-8 divide-y divide-line border-y border-line bg-surface">
               {ROADMAPS.map((r) => (
                 <li key={r.id} className="grid gap-2 px-4 py-5 sm:grid-cols-[14rem_minmax(0,1fr)_9rem] sm:items-baseline sm:gap-6">
                   <div>
@@ -231,7 +246,7 @@ export function LandingPage() {
           </div>
         </section>
       </main>
-      <footer className="border-t border-line bg-white py-6 text-center text-sm text-slate-muted"><Wordmark /></footer>
+      <footer className="border-t border-line bg-surface py-6 text-center text-sm text-slate-muted"><Wordmark /></footer>
     </div>
   )
 }

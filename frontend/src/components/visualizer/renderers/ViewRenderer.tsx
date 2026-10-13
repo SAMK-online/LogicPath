@@ -31,9 +31,9 @@ export function ViewRenderer({ view, step, prevStep }: { view: ViewSpec; step: P
   }
   const prevPointers = prevStep ? marksAt(prevStep) : undefined
   return (
-    <section className="rounded-lg border border-line bg-white p-3.5 shadow-card" aria-label={`${view.var} (${KIND_LABEL[view.kind]})`}>
+    <section className="rounded-lg border border-line bg-surface p-3.5 shadow-card" aria-label={`${view.var} (${KIND_LABEL[view.kind]})`}>
       <h4 className="mb-2 flex items-baseline gap-2 text-xs font-semibold text-slate-muted">
-        <span className="font-mono text-sm text-navy">{view.var}</span><span>{view.title ?? KIND_LABEL[view.kind]}</span>
+        <span className="font-mono text-sm text-ink">{view.var}</span><span>{view.title ?? KIND_LABEL[view.kind]}</span>
       </h4>
       {value === undefined ? <p className="text-sm text-slate-muted">Not defined yet at this step.</p> : (
         view.kind === 'array' ? <ArrayView id={view.var} value={value} prev={prev} pointers={pointers} prevPointers={prevPointers} />

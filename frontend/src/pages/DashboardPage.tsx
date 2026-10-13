@@ -61,7 +61,7 @@ export function DashboardPage() {
       )}
 
       {resume && (
-        <Link to={workspaceLink(resume)} className="mt-6 flex items-center justify-between gap-4 rounded-lg border-l-4 border-copper bg-white px-5 py-4 shadow-card transition-shadow hover:shadow-raise">
+        <Link to={workspaceLink(resume)} className="mt-6 flex items-center justify-between gap-4 rounded-lg border-l-4 border-copper bg-surface px-5 py-4 shadow-card transition-shadow hover:shadow-raise">
           <div>
             <p className="text-sm text-slate-muted">Pick up where you left off</p>
             <p className="mt-1 font-display text-xl font-semibold">{resume.title}</p>
@@ -77,7 +77,7 @@ export function DashboardPage() {
       {roadmaps && (
         <section className="mt-10" aria-labelledby="roadmaps-h">
           <h2 id="roadmaps-h" className="label">Learning roadmaps</h2>
-          <ul className="mt-2 divide-y divide-line overflow-hidden rounded-lg border border-line bg-white shadow-card">
+          <ul className="mt-2 divide-y divide-line overflow-hidden rounded-lg border border-line bg-surface shadow-card">
             {roadmaps.map((r) => {
               const started = r.completed_problems > 0 || progress?.problems.some((p) => p.roadmap_id === r.id)
               return (

@@ -20,7 +20,7 @@ function WorkspaceSkeleton() {
   return (
     <div className="grid h-full gap-px bg-line lg:grid-cols-[360px_1fr_380px]" aria-busy="true" aria-label="Opening workspace…">
       {[0, 1, 2].map((i) => (
-        <div key={i} className="space-y-3 bg-white p-5">
+        <div key={i} className="space-y-3 bg-surface p-5">
           <Skeleton className="h-6 w-2/3" /><Skeleton className="h-4 w-full" /><Skeleton className="h-4 w-5/6" /><Skeleton className="h-32" />
         </div>
       ))}
@@ -77,25 +77,25 @@ export function WorkspacePage() {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex shrink-0 items-center justify-between gap-3 border-b border-line bg-white px-4 py-2 text-sm">
-        <Link to={backTo} className="shrink-0 text-slate-muted hover:text-navy">← {roadmapId ? 'Roadmap' : 'Dashboard'}</Link>
+      <div className="flex shrink-0 items-center justify-between gap-3 border-b border-line bg-surface px-4 py-2 text-sm">
+        <Link to={backTo} className="shrink-0 text-slate-muted hover:text-ink">← {roadmapId ? 'Roadmap' : 'Dashboard'}</Link>
         <div className="flex min-w-0 items-center gap-2.5">
           <span className="truncate font-medium">{ws.problem.title}</span>
           <DifficultyBadge level={ws.problem.difficulty} />
         </div>
-        <button className="hidden shrink-0 text-xs text-slate-muted hover:text-navy lg:block" onClick={resetLayout} title="Restore the default panel sizes">Reset layout</button>
+        <button className="hidden shrink-0 text-xs text-slate-muted hover:text-ink lg:block" onClick={resetLayout} title="Restore the default panel sizes">Reset layout</button>
         <span className="w-16 lg:hidden" />
       </div>
 
-      <div role="tablist" aria-label="Workspace sections" className="flex shrink-0 border-b border-line bg-white lg:hidden">
+      <div role="tablist" aria-label="Workspace sections" className="flex shrink-0 border-b border-line bg-surface lg:hidden">
         {tabs.map(([id, label]) => (
           <button key={id} role="tab" aria-selected={tab === id} onClick={() => setTab(id)}
-            className={`flex-1 py-2.5 text-sm font-medium ${tab === id ? 'border-b-2 border-copper text-navy' : 'text-slate-muted'}`}>{label}</button>
+            className={`flex-1 py-2.5 text-sm font-medium ${tab === id ? 'border-b-2 border-copper text-ink' : 'text-slate-muted'}`}>{label}</button>
         ))}
       </div>
 
       <div className="grid min-h-0 flex-1 lg:grid-cols-[var(--left)_auto_minmax(0,1fr)_auto_var(--right)]" style={gridVars}>
-        <section aria-label="Problem" className={`${show('problem')} min-h-0 min-w-0 flex-col bg-white`}>
+        <section aria-label="Problem" className={`${show('problem')} min-h-0 min-w-0 flex-col bg-surface`}>
           <ProblemPanel problem={ws.problem} />
         </section>
 
@@ -109,15 +109,15 @@ export function WorkspacePage() {
           {showResults && (
             <Splitter orientation="horizontal" label="Resize output panel" value={bottomH} min={140} max={640} invert onChange={setBottomH} onReset={resetBottomH} />
           )}
-          <div className="flex min-h-0 shrink-0 flex-col bg-white" style={showResults ? { height: bottomH, maxHeight: '75%' } : undefined}>
+          <div className="flex min-h-0 shrink-0 flex-col bg-surface" style={showResults ? { height: bottomH, maxHeight: '75%' } : undefined}>
             <div className="flex shrink-0 items-center justify-between border-t border-line pr-2">
               <div role="tablist" aria-label="Output" className="flex">
                 {([['results', 'Test results'], ['custom', 'Try your own'], ['visualize', 'Visualize']] as const).map(([id, label]) => (
                   <button key={id} role="tab" aria-selected={bottom === id} onClick={() => { setBottom(id); setShowResults(true) }}
-                    className={`px-4 py-2 text-sm font-medium transition-colors ${bottom === id ? 'border-b-2 border-copper text-navy' : 'border-b-2 border-transparent text-slate-muted hover:text-navy'}`}>{label}</button>
+                    className={`px-4 py-2 text-sm font-medium transition-colors ${bottom === id ? 'border-b-2 border-copper text-ink' : 'border-b-2 border-transparent text-slate-muted hover:text-ink'}`}>{label}</button>
                 ))}
               </div>
-              <button className="rounded px-2 py-1 text-slate-muted hover:bg-navy-50 hover:text-navy" aria-expanded={showResults} aria-label={showResults ? 'Collapse panel' : 'Expand panel'}
+              <button className="rounded px-2 py-1 text-slate-muted hover:bg-navy-50 hover:text-ink" aria-expanded={showResults} aria-label={showResults ? 'Collapse panel' : 'Expand panel'}
                 onClick={() => setShowResults((s) => !s)}>{showResults ? '▾' : '▸'}</button>
             </div>
             {showResults && (

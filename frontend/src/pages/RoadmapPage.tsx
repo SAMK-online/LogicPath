@@ -27,7 +27,7 @@ export function RoadmapPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-      <Link to="/dashboard" className="text-sm text-slate-muted hover:text-navy">← Dashboard</Link>
+      <Link to="/dashboard" className="text-sm text-slate-muted hover:text-ink">← Dashboard</Link>
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <h1 className="font-display text-4xl font-semibold tracking-tight">{roadmap.title}</h1>
         <DifficultyBadge level={roadmap.difficulty} />
@@ -59,7 +59,7 @@ export function RoadmapPage() {
               {/* timeline rail + status node */}
               {i < roadmap.topics.length - 1 && <span aria-hidden className="absolute bottom-0 left-[11px] top-7 w-px bg-line" />}
               <span aria-hidden className={`absolute left-0 top-1 grid h-6 w-6 place-items-center rounded-full border-2 bg-paper ${done ? 'border-ok bg-ok text-white' : started ? 'border-copper' : 'border-line'}`}>
-                {done ? <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2.5 6.2l2.3 2.3 4.7-4.9" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                {done ? <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2.5 6.2l2.3 2.3 4.7-4.9" fill="none" stroke="var(--color-paper)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   : started ? <span className="h-2 w-2 rounded-full bg-copper" /> : null}
               </span>
               <div className="mb-3 flex items-center gap-3">
