@@ -47,7 +47,7 @@ function useInView<T extends Element>() {
 }
 
 const HEADLINE = 'A tutor that builds your instinct instead of giving answers'
-const kw = 'text-[#e3a98a]', num = 'text-[#a9c4e4]', cm = 'text-[#7f93ad]'
+const kw = 'text-[#e3a98a]', num = 'text-[#a9c4e4]'
 
 function SessionExample() {
   return (
@@ -71,14 +71,14 @@ function SessionExample() {
         <p className="font-medium text-white">6 of 7 tests passed</p>
         <ul className="mt-2 space-y-1 text-[13px] text-white/70">
           <li>Six small cases pass.</li>
-          <li className="flag -mx-1 rounded px-1" style={{ '--d': '2100ms' } as React.CSSProperties}><span className="text-[#f2b8ae]">Too slow</span> on 20,000 numbers: took 4.1 s, the limit is 1 s.</li>
+          <li className="flag -mx-1 rounded px-1" style={{ '--d': '2100ms' } as React.CSSProperties}><span className="text-[#f2b8ae]">Too slow</span> on the large input test: took 4.1 s, the limit is 1 s.</li>
         </ul>
       </div>
       <figcaption className="rise relative border-t border-copper/40 bg-[#14263d] px-4 py-4" style={{ '--d': '2600ms' } as React.CSSProperties}>
         <span aria-hidden className="rule-draw absolute inset-y-0 left-0 w-0.5 bg-copper" style={{ '--d': '2600ms' } as React.CSSProperties} />
         <p className="text-xs text-copper-100">Tutor</p>
         <p className="tutor-voice mt-1 italic text-white">
-          Your logic holds on every small case. The last test has 20,000 numbers. For a single number, how many others does your loop have to look at?
+          Your logic holds on every small case. The last test uses a large input. For a single number, how many others does your loop have to look at?
         </p>
       </figcaption>
     </figure>
@@ -182,7 +182,7 @@ export function LandingPage() {
             <caption className="pb-2 text-left text-sm text-slate-muted">Two Sum, before and after a rewrite (example)</caption>
             <thead className="text-slate-muted"><tr className="border-b border-line"><th className="py-2 pr-4 font-medium">Test</th><th className="py-2 pr-4 font-medium">First attempt</th><th className="py-2 font-medium">Second attempt</th></tr></thead>
             <tbody className="divide-y divide-line">
-              {[['Small cases (6)', 'Pass', 'Pass'], ['20,000 numbers, limit 1 s', 'Too slow, 4.1 s', 'Pass, under 0.1 s']].map(([t, a, b]) => (
+              {[['Small cases (6)', 'Pass', 'Pass'], ['Large input test, limit 1 s', 'Too slow, 4.1 s', 'Pass, under 0.1 s']].map(([t, a, b]) => (
                 <tr key={t}><td className="py-3 pr-4">{t}</td><td className={`py-3 pr-4 ${a.startsWith('Too') ? 'font-medium text-bad' : ''}`}>{a}</td><td className="py-3 font-medium text-ok">{b}</td></tr>
               ))}
             </tbody>

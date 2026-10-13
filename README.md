@@ -268,26 +268,3 @@ Most problems end with **constraint-sized tests**: inputs as large as the stated
 **How they are built.** Large inputs are stored as tiny `{"$gen": ...}` specs (ranges, seeded shuffles, repeats, concatenations, ...) and expanded inside the worker by `harness.py`, so every fixture stays under a few KB (one at 35 KB) and every machine builds identical data. The generators use their own deterministic LCG, not the `random` module. `scripts/build_fixtures.py` imports the same harness to compute expected outputs, checks every `expected_spec` against the reference solution, and keeps numbers within what JavaScript can represent exactly. Input generation is not charged to the student's time.
 
 **How they are verified.** `backend/tests/test_performance_fixtures.py` runs an independent optimal solution for every problem (must pass everything within 50% of each limit) and an independent brute-force solution (must pass the ordinary tests and fail the large ones). The brute-force proofs run each hopeless solution in a subprocess and take about four minutes, so they are marked `slow`: `cd backend && pytest -m slow`. A Playwright test confirms the behaviour in the real Pyodide runtime.
-
-## Deployment
-- **Frontend:** `cd frontend && npm run build` → static `dist/` (any static host with an SPA fallback to `index.html`). Set `VITE_API_BASE_URL` at build time if the API is on another origin. Pyodide and Monaco load from the CDN in the browser. Self-host Pyodide with `VITE_PYODIDE_URL`.
-- **Backend:** `backend/Dockerfile` (or `alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8100 --proxy-headers`). Set `ENV=production`, `COOKIE_SECURE=true`, a real `SESSION_SECRET`, `FRONTEND_ORIGIN=https://your-frontend`, and the LLM variables. Run **one worker**.
-- **Same site is easiest.** Serving the frontend and API under one domain (e.g. a reverse proxy routing `/api`) keeps cookies first-party with `SameSite=Lax`. For separate sites you need `COOKIE_SAMESITE=none` + `COOKIE_SECURE=true`, and browsers increasingly block third-party cookies, so prefer a shared parent domain/proxy.
-- **SQLite on a persistent disk.** Mount a volume and point `DATABASE_URL` at it (Docker image uses `/data`). Ephemeral container filesystems (many PaaS free tiers, serverless) **lose the database on restart or redeploy**; use a persistent disk or move to Postgres.
-- **SQLite concurrency.** One writer at a time (WAL lets readers continue). That is fine for a classroom-scale deployment but is the first thing to replace at larger scale: switching to Postgres is a `DATABASE_URL` change plus testing the migration (models are portable SQLAlchemy; JSON columns map to JSON/JSONB).
-- Back up the `.db` file with SQLite's online backup (`sqlite3 db ".backup file"`), not a raw copy of a live database.
-
-## Known limitations
-- **Client-side execution is not tamper-proof** and tests are public (see above). No server-side grading.
-- **Pyodide/Monaco need the internet** (CDN) on first load; there is no offline mode. First run downloads the Python runtime (~10 MB, then cached).
-- **Execution limits:** there is a per-test time limit on performance tests, but it is checked after the function returns (Pyodide cannot interrupt a running function without terminating the worker), so a hopeless solution is only stopped by the 8 s overall limit, which then reports the stuck test. Timings depend on the machine: the limits leave a large margin for efficient solutions (they take milliseconds against a 1 s limit) but a very slow device could in principle fail a borderline one; memory is not limited beyond the browser's. Pyodide cannot interrupt a loop without terminating the worker, which is why recovery recreates it (a re-download is served from the browser cache).
-- Python only. No third-party packages in student code.
-- **Rate limiter and state are per-process.** Multiple workers/instances need a shared store (Redis) and a database other than SQLite.
-- **Tutor quality is not proven offline.** The deterministic tests verify the pipeline and guards; whether a given model follows the Socratic rules must be checked with the live eval runner. The tutor has not been exercised against a real API key in this repository's tests; the provider is tested against a fake HTTP transport for request shape and error mapping.
-- Learning state is deliberately small (`hint_level`, `hints_used`, last test run, code version). Tracking inferred approach/concepts/difficulty areas is a possible next step; no summarisation LLM calls are made.
-- Saves are last-write-wins across tabs.
-- No email verification, password reset, account deletion, or admin tooling.
-- Streaming (SSE) for tutor replies is not implemented; the REST endpoint returns the full reply.
-- **The AI visualizer path has not been exercised against a real model.** It reuses the tested Anthropic provider and is covered with a scripted LLM (schema, sanitization, caching, failures), but the quality of real captions and view choices needs a manual check with a key.
-- The test-case view draws data as-is; it does not infer which output values are indexes into an input (for example it does not mark the expected indices in Two Sum).
-- Tree layout is a simple in-order layout for binary trees (no layout library); general graphs are not drawn.
