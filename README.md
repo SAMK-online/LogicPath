@@ -16,7 +16,7 @@ The screenshot above is a real session. The nested-loop Two Sum passes six small
 - **Tests that stop brute force.** 20 of the 29 problems include tests at the largest size the constraints allow, each with a time limit. Binary Search is checked by how many items your code looks at, since a linear scan is still fast on a million numbers.
 - **A finish line.** Once every test passes, the tutor stops probing and asks you for the time and space complexity, then closes.
 - **Code runs in your browser.** Python runs in Pyodide in a Web Worker. Nothing you run executes on the server.
-- **A visualizer.** Pick a test case and step through your code line by line while variables, lists, dictionaries and trees update. An AI view adds captions that explain each step.
+- **A visualizer.** Pick a test case and step through your code line by line while variables, lists, dictionaries and trees update.
 - **Three roadmaps.** Python Foundations (12 problems), DSA Fundamentals (17) and Blind 75 (75 listed, 14 playable so far). Progress, resume and saved code carry across sessions.
 
 ![Dashboard](docs/screenshots/dashboard.png)
@@ -127,7 +127,7 @@ scripts/build_fixtures.py  generates the fixtures (see "Problem content")
 | `POST /api/sessions`, `GET /api/sessions/{id}`, `PUT /api/sessions/{id}/code` | Open/resume a workspace, save code (never calls the LLM) |
 | `POST /api/chat` | Tutor: `kind` = `chat` \| `hint` \| `review` |
 | `GET /api/progress`, `POST /api/submissions` | Progress and client-reported test runs |
-| `POST /api/visualize` | Optional AI view for a client-recorded trace: returns a validated JSON spec (see "Visualizer") |
+| `POST /api/visualize` | AI view for a client-recorded trace: returns a validated JSON spec. Not used by the interface at present (see "Visualizer") |
 
 Errors always look like `{"error": {"code", "message", "details?"}}` (`validation_error` 422, `invalid_credentials` 401, `csrf_failed` 403, `rate_limited` 429, `llm_unavailable` 503, ...). Internal traces, keys, hashes and tokens are never returned.
 
@@ -144,22 +144,11 @@ Errors always look like `{"error": {"code", "message", "details?"}}` (`validatio
 > **Run also saves.** Clicking Run sends the code that ran with the result, and the server stores it like a save, so a submission always refers to a real code version.
 
 ### Visualizer
-A **Visualize** tab under the editor (next to *Test results*) lets a student pick a test case and see it drawn. It has three parts, each usable without the next.
+A **Visualize** tab under the editor (next to *Test results*) lets a student pick a test case and see it drawn. It has two parts, each usable without the other.
 
 1. **Test case view (no AI, no execution).** The selected test's inputs and expected output are drawn straight from the structured test data: arrays, strings, dicts/sets, stacks, linked lists and binary trees.
 2. **Step through my code.** *Trace my code* runs the student's **current editor code** on the chosen test case in the Pyodide worker under `sys.settrace` and records a bounded list of steps (line, event, call depth, snapshot of local variables). The stepper has Play/Pause, Back/Next, a scrubber, speed, and arrow keys. The executing line is highlighted in Monaco, the variables that changed since the last step are flagged, and variables are drawn live (arrays with `i`/`lo`/`hi`/`mid` pointer markers, dicts, stacks, trees). Runtime errors keep the steps up to the failure viewable. It shows what **their** code does, so nothing about the correct algorithm is revealed.
-3. **AI view & captions (only on click).** *✨ AI view & captions* sends a **compact** trace (at most 60 sampled steps, at most 8 short variables each, plus the code and problem) to `POST /api/visualize`. The model answers with one JSON object: which variables to draw as which view, which integer variables are pointers, and up to 12 short captions that describe what happened or ask a guiding question. Nothing is sent to the model unless that button is pressed.
-
-**The AI returns data, never code.** The reply is parsed and validated against a strict Pydantic schema (`extra=forbid`, length caps, plain identifiers only) and validated again on the client before use; the client draws it with its own fixed renderers. Nothing the model returns is executed or rendered as HTML.
-
-**Safety and cost controls**
-- Views may only reference variables that really appear in the trace; unknown names are dropped.
-- Captions are filtered: anything with code, backticks, angle brackets, or phrasing that tells the student what to do or what the right value is ("you should", "use a hash map", "rather than", "instead of", "should have", "mid + 1", "is wrong") is removed, and the response says when that happened. The filter is also re-applied to cached specs, so tightening it cleans up older results. (A real-model run produced a caption that revealed the fix; that is why these patterns exist.) The prompt also forbids revealing or hinting at the solution. The filter is a heuristic backstop, not a guarantee.
-- Student code and trace text are untrusted: they are delimited and neutralized exactly like tutor input, and the system prompt says they are data, never instructions. Reference solutions do not exist anywhere in the app.
-- One LLM call per (session, code version, test case, provider mode); repeats come from the `visualizations` table. A mock-mode spec is never served as a real one.
-- Same rate limit, output cap, prompt caching and token-usage logging as chat; visualizing never consumes a hint or writes chat messages.
-- If the model's output is invalid, the request fails with a safe `visualization_invalid` error and the client falls back to the automatic view (heuristic mapping of variables to renderers), so the feature still works without the AI.
-- Mock mode returns a deterministic valid spec with placeholder captions, clearly labelled "not from an AI model".
+The visualizer never calls an AI model. The backend still has `POST /api/visualize` (a model picks views and writes captions, behind schema validation, a caption safety filter and a per-code cache), but the interface no longer offers it.
 
 **Limits.** Traces are capped at 500 steps (a looping program stops there with a clear message, and the steps so far remain viewable) and the whole trace is subject to the same 8 s timeout and worker recreation as Run. Snapshots keep at most 50 items per container, 3 levels deep and 80 characters per string, and tree snapshots at most 63 nodes. Each iteration of a comprehension counts as steps (Python 3.13 traces them inline). Tracing is for step-through understanding, not for timing. A student can defeat the step cap with a bare `except:` that swallows the stop signal; the run is then ended by the timeout instead.
 
@@ -218,7 +207,7 @@ cd frontend && npm test && npm run typecheck && npm run lint
 # end-to-end (Playwright; boots its own backend on :8101 and Vite on :5174 with a throwaway DB and the mock tutor)
 cd frontend && npx playwright install chromium && npm run e2e
 ```
-The e2e suite has two specs. `tutor.spec.ts` covers register → protected-route redirect → roadmap → problem → failing run → syntax error → infinite loop timeout and recovery → passing run → unsaved indicator → save → tutor chat and hint → **refresh and resume** → progress on dashboard → logout. `performance.spec.ts` covers a brute-force Two Sum being stopped by the 20,000-number test (with partial results) and a linear Binary Search failing the inspection budget, each followed by the fixed solution passing. `layout.spec.ts` covers resizing by mouse and keyboard, persistence, reset, and the phone layout. `visualize.spec.ts` covers the test-case view, tracing with Monaco line highlighting, stepping and pointer markers, the (mock) AI view with caching, a looping program (truncated at 500 steps) and a syntax error.
+The e2e suite has two specs. `tutor.spec.ts` covers register → protected-route redirect → roadmap → problem → failing run → syntax error → infinite loop timeout and recovery → passing run → unsaved indicator → save → tutor chat and hint → **refresh and resume** → progress on dashboard → logout. `performance.spec.ts` covers a brute-force Two Sum being stopped by the 20,000-number test (with partial results) and a linear Binary Search failing the inspection budget, each followed by the fixed solution passing. `layout.spec.ts` covers resizing by mouse and keyboard, persistence, reset, and the phone layout. `visualize.spec.ts` covers the test-case view, tracing with Monaco line highlighting, stepping and pointer markers, a looping program (truncated at 500 steps) and a syntax error.
 
 **AI evaluation.** `backend/evals/scenarios.py` defines 15 scenarios (solution request, brute force, logic bug, complexity misconception, stuck, improved solution, failed test case, two prompt-injection attempts, beginner off-by-one, interview review, hint escalation, continuity, ...).
 - *Deterministic* (`tests/test_tutor_scenarios.py`, runs in `pytest`): a scripted LLM is run through the real pipeline to prove the tutor is shown the right code, hint level, roadmap style, and test results, that injections can't break out of their delimiters, and that the leak guard blocks a complying model.

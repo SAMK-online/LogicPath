@@ -64,7 +64,6 @@ test('custom cases: run, visualize, nothing is recorded', async ({ page }) => {
   const viz = page.getByTestId('visualizer')
   await expect(viz.getByTestId('step-counter')).toContainText('Step 1 of', { timeout: 60_000 })
   await expect(viz.getByLabel('Test case')).toHaveValue('-1')
-  await expect(viz.getByRole('button', { name: /AI view/ })).toBeDisabled()
 
   // none of it was recorded as a submission
   expect(submissions).toEqual([])

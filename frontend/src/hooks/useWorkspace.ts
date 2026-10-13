@@ -25,7 +25,6 @@ export interface Workspace {
   saveError: string | null
   save: () => Promise<boolean>
   savedCode: string
-  markSaved: (code: string) => void
   running: boolean
   runResult: RunResult | null
   runNotice: string | null
@@ -143,7 +142,7 @@ export function useWorkspace(problemId: string, roadmapId: string | null, runner
 
   return {
     problem, session, loadError, reload: () => setNonce((n) => n + 1),
-    code, setCode, saveState, saveError, save, savedCode, markSaved: setSavedCode, running, runResult, runNotice, run,
+    code, setCode, saveState, saveError, save, savedCode, running, runResult, runNotice, run,
     messages, sending, chatError, hintLevel,
     sendChat: (text) => ask({ kind: 'chat', message: text }),
     requestHint: async () => { await ask({ kind: 'hint' }) },

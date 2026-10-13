@@ -129,8 +129,8 @@ export function WorkspacePage() {
                     onVisualize={(id) => { setVizFocus({ id, n: Date.now() }); setBottom('visualize') }} />
                 ) : (
                   <Suspense fallback={<div className="space-y-2 p-4"><Skeleton className="h-8 w-64" /><Skeleton className="h-24" /></div>}>
-                    <VisualizerPanel problem={ws.problem} code={ws.code} savedCode={ws.savedCode} sessionId={ws.session.id} runner={runner}
-                      onHighlightLine={setHighlightLine} onSynced={ws.markSaved} extraCases={custom.cases} focus={vizFocus} onFocusHandled={() => setVizFocus(null)} />
+                    <VisualizerPanel problem={ws.problem} code={ws.code} runner={runner}
+                      onHighlightLine={setHighlightLine} extraCases={custom.cases} focus={vizFocus} onFocusHandled={() => setVizFocus(null)} />
                   </Suspense>
                 )}
               </div>

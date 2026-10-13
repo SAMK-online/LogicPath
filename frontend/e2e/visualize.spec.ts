@@ -31,7 +31,7 @@ async function signUp(page: Page) {
   await expect(page.getByRole('heading', { name: /Welcome/ })).toBeVisible()
 }
 
-test('visualize: test case view → trace stepping with editor highlight → AI view → looping code', async ({ page }) => {
+test('visualize: test case view → trace stepping with editor highlight → looping code', async ({ page }) => {
   await signUp(page)
   await page.goto('/workspace/binary-search?roadmap=dsa-fundamentals')
   await expect(page.getByRole('heading', { name: 'Binary Search' })).toBeVisible()
@@ -65,15 +65,6 @@ test('visualize: test case view → trace stepping with editor highlight → AI 
   // jump to the end: the result is shown
   await viz.getByRole('slider', { name: 'Step' }).fill(String(firstTotal - 1))
   await expect(viz.getByTestId('trace-end')).toContainText('returned 4')
-
-  // Part 3: AI view (mock provider in e2e) adds captions and a clearly-labelled mock note
-  await viz.getByRole('button', { name: /AI view/ }).click()
-  await expect(viz.getByRole('note')).toContainText('not from an AI model')
-  await viz.getByRole('button', { name: 'First step' }).click()
-  await expect(viz.getByTestId('caption')).toContainText('(mock)')
-  // repeating is served from the cache
-  await viz.getByRole('button', { name: /AI view/ }).click()
-  await expect(viz.getByText(/Loaded a saved view/)).toBeVisible()
 
   // Looping code: truncated quickly, not hung; steps up to that point are still viewable
   await setEditor(page, 'def search(nums, target):\n    while True:\n        pass\n')

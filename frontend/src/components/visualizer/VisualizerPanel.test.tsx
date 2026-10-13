@@ -1,7 +1,6 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { ApiError } from '../../services/api'
 import type { PythonRunner } from '../../services/pythonRunner'
 import type { Trace } from '../../services/trace'
 import { problem, trace } from '../../test/fixtures'
@@ -12,11 +11,10 @@ vi.mock('../../services/api', async (orig) => ({ ...(await orig<typeof import('.
 
 const runner = { trace: vi.fn() } as unknown as PythonRunner & { trace: ReturnType<typeof vi.fn> }
 const onHighlightLine = vi.fn()
-const onSynced = vi.fn()
 const CODE = 'def two_sum(nums, target):\n    pass\n'
 
 function setup(over: Partial<React.ComponentProps<typeof VisualizerPanel>> = {}) {
-  const props = { problem, code: CODE, savedCode: CODE, sessionId: 'sess-1', runner, onHighlightLine, onSynced, ...over }
+  const props = { problem, code: CODE, runner, onHighlightLine, ...over }
   const view = render(<VisualizerPanel {...props} />)
   return { ...view, props }
 }
@@ -95,7 +93,6 @@ describe('Part 2: step through the code', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Trace my code' }))
     expect(await screen.findByRole('alert')).toHaveTextContent('SyntaxError')
     expect(screen.queryByTestId('step-counter')).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /AI view/ })).toBeDisabled()
   })
 
   it('shows truncation and timeout messages', async () => {
@@ -134,85 +131,5 @@ describe('Part 2: step through the code', () => {
     await doTrace()
     await userEvent.selectOptions(screen.getByLabelText('Test case'), '2')
     expect(screen.queryByTestId('step-counter')).not.toBeInTheDocument()
-  })
-})
-
-describe('Part 3: AI view and captions (only on click)', () => {
-  const okSpec = { views: [{ var: 'seen', kind: 'map' }, { var: 'nums', kind: 'array', pointers: ['i'] }], captions: [{ step: 2, text: 'i is now 0. What is in seen?' }] }
-  const response = (over = {}) => ({ spec: okSpec, cached: false, code_version: 1, tutor_mode: 'live', captions_removed: false, ...over })
-
-  it('never calls the AI by itself; the button is disabled until there is a trace', async () => {
-    setup()
-    await goTrace()
-    expect(screen.getByRole('button', { name: /AI view/ })).toBeDisabled()
-    await userEvent.click(screen.getByRole('button', { name: 'Trace my code' }))
-    await screen.findByTestId('step-counter')
-    expect(apiMock.visualize).not.toHaveBeenCalled()
-  })
-
-  it('sends a compact trace, applies the returned views and shows captions at the right step', async () => {
-    apiMock.visualize.mockResolvedValue(response())
-    setup()
-    await doTrace()
-    await userEvent.click(screen.getByRole('button', { name: /AI view/ }))
-    await waitFor(() => expect(apiMock.visualize).toHaveBeenCalledTimes(1))
-    const body = apiMock.visualize.mock.calls[0][0]
-    expect(body).toMatchObject({ session_id: 'sess-1', test_case_id: 1 })
-    expect(body).not.toHaveProperty('code') // saved code matches the editor
-    expect(body.trace.steps.length).toBeLessThanOrEqual(60)
-    expect(body.trace.var_kinds.nums).toBe('list')
-    expect(screen.queryByTestId('caption')).not.toBeInTheDocument() // step 1: before the first caption
-    await userEvent.click(screen.getByRole('button', { name: /Next/ }))
-    await userEvent.click(screen.getByRole('button', { name: /Next/ }))
-    expect(await screen.findByTestId('caption')).toHaveTextContent('i is now 0. What is in seen?')
-    const regions = screen.getAllByRole('region').map((r) => r.getAttribute('aria-label'))
-    expect(regions.indexOf('seen (map)')).toBeLessThan(regions.indexOf('nums (array)')) // AI order is used
-  })
-
-  it('includes the code (and tells the workspace it was saved) when the editor has unsaved edits', async () => {
-    apiMock.visualize.mockResolvedValue(response())
-    setup({ code: CODE + '# new', savedCode: CODE })
-    await doTrace()
-    await userEvent.click(screen.getByRole('button', { name: /AI view/ }))
-    await waitFor(() => expect(apiMock.visualize.mock.calls[0][0].code).toBe(CODE + '# new'))
-    await waitFor(() => expect(onSynced).toHaveBeenCalledWith(CODE + '# new'))
-  })
-
-  it('labels mock output and cached/filtered results', async () => {
-    apiMock.visualize.mockResolvedValue(response({ tutor_mode: 'mock', cached: true, captions_removed: true }))
-    setup()
-    await doTrace()
-    await userEvent.click(screen.getByRole('button', { name: /AI view/ }))
-    expect(await screen.findByRole('note')).toHaveTextContent('not from an AI model')
-    expect(screen.getByText(/Loaded a saved view/)).toBeInTheDocument()
-    expect(screen.getByText(/removed by the safety filter/)).toBeInTheDocument()
-  })
-
-  it('falls back to the automatic view when the spec is unusable', async () => {
-    apiMock.visualize.mockResolvedValue(response({ spec: { views: [{ var: 'nums', kind: 'hologram' }] } }))
-    setup()
-    await doTrace()
-    await userEvent.click(screen.getByRole('button', { name: /AI view/ }))
-    expect(await screen.findByText(/could not be used, so the automatic view is shown/)).toBeInTheDocument()
-    expect(screen.getByRole('region', { name: 'nums (array)' })).toBeInTheDocument()
-  })
-
-  it('falls back with a clear message when the request fails', async () => {
-    apiMock.visualize.mockRejectedValue(new ApiError(503, 'llm_unavailable', 'The AI tutor is temporarily unavailable.'))
-    setup()
-    await doTrace()
-    await userEvent.click(screen.getByRole('button', { name: /AI view/ }))
-    expect(await screen.findByText(/temporarily unavailable\. The automatic view is shown/)).toBeInTheDocument()
-    expect(counter()).toBeInTheDocument()
-  })
-
-  it('ignores views for variables that are not in the trace', async () => {
-    apiMock.visualize.mockResolvedValue(response({ spec: { views: [{ var: 'ghost', kind: 'array' }, { var: 'seen', kind: 'map' }] } }))
-    setup()
-    await doTrace()
-    await userEvent.click(screen.getByRole('button', { name: /AI view/ }))
-    await waitFor(() => expect(screen.queryByRole('region', { name: 'ghost (array)' })).not.toBeInTheDocument())
-    expect(screen.getByRole('region', { name: 'seen (map)' })).toBeInTheDocument()
-    expect(screen.queryByRole('region', { name: 'nums (array)' })).not.toBeInTheDocument()
   })
 })
