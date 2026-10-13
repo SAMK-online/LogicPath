@@ -5,6 +5,8 @@ export type Snap =
   | { t: 'list' | 'tuple' | 'set'; n: number; v: Snap[] }
   | { t: 'dict'; n: number; v: [Snap, Snap][] }
   | { t: 'tree'; v: Snap[] }
+  /** a chain of ListNode objects, as its values in order; `more` means it is longer than shown or loops back on itself */
+  | { t: 'linked'; n: number; v: Snap[]; more?: boolean }
   | { t: 'obj'; v: string }
 
 export interface TraceStep {
@@ -31,6 +33,7 @@ type Obj = Exclude<Snap, null | boolean | number | string>
 export const isObj = (s: Snap): s is Obj => typeof s === 'object' && s !== null
 export const isList = (s: Snap): s is Extract<Obj, { t: 'list' | 'tuple' | 'set' }> => isObj(s) && (s.t === 'list' || s.t === 'tuple' || s.t === 'set')
 export const isDict = (s: Snap): s is Extract<Obj, { t: 'dict' }> => isObj(s) && s.t === 'dict'
+export const isLinked = (s: Snap): s is Extract<Obj, { t: 'linked' }> => isObj(s) && s.t === 'linked'
 export const isTree = (s: Snap): s is Extract<Obj, { t: 'tree' }> => isObj(s) && s.t === 'tree'
 
 /** Short human-readable form of a snapshot (for the variable table, captions and the AI request). */
@@ -48,6 +51,7 @@ function fmtFull(s: Snap): string {
     case 'tuple': return `(${s.v.map(fmtFull).join(', ')}${s.n > s.v.length ? ', …' : ''})`
     case 'set': return `{${s.v.map(fmtFull).join(', ')}${s.n > s.v.length ? ', …' : ''}}`
     case 'dict': return `{${s.v.map(([k, v]) => `${fmtFull(k)}: ${fmtFull(v)}`).join(', ')}${s.n > s.v.length ? ', …' : ''}}`
+    case 'linked': return `${s.v.map(fmtFull).join(' → ')}${s.more ? ' → …' : ''}`
     case 'tree': return `Tree(${s.v.map((x) => (x === null ? 'None' : fmtFull(x))).join(', ')})`
     case 'obj': return s.v
   }
@@ -64,6 +68,7 @@ export const kindOfSnap = (s: Snap): string => {
 /** Convert raw JSON test data (args / expected output) into snapshots so the same renderers can draw it. */
 export function fromJson(value: unknown, type = ''): Snap {
   if (type.startsWith('Optional[TreeNode]') && Array.isArray(value)) return { t: 'tree', v: value.map((x) => fromJson(x)) }
+  if (type.startsWith('Optional[ListNode]') && Array.isArray(value)) return { t: 'linked', n: value.length, v: value.slice(0, 50).map((x) => fromJson(x)), ...(value.length > 50 ? { more: true } : {}) }
   if (value === null || typeof value === 'boolean' || typeof value === 'number' || typeof value === 'string') return value
   if (Array.isArray(value)) return { t: 'list', n: value.length, v: value.slice(0, 50).map((x) => fromJson(x)) }
   if (typeof value === 'object') {
@@ -83,8 +88,8 @@ export function changedVars(prev: TraceStep | undefined, cur: TraceStep): Set<st
 }
 
 // ---------------------------------------------------------------- views ---
-export type ViewKind = 'array' | 'string' | 'map' | 'stack' | 'list' | 'tree' | 'scalar'
-export const VIEW_KINDS: ViewKind[] = ['array', 'string', 'map', 'stack', 'list', 'tree', 'scalar']
+export type ViewKind = 'array' | 'string' | 'map' | 'stack' | 'list' | 'tree' | 'graph' | 'scalar'
+export const VIEW_KINDS: ViewKind[] = ['array', 'string', 'map', 'stack', 'list', 'tree', 'graph', 'scalar']
 export interface ViewSpec { var: string; kind: ViewKind; pointers?: string[]; title?: string }
 export interface Caption { step: number; text: string }
 export interface VisualSpec { views: ViewSpec[]; captions: Caption[]; summary?: string }
@@ -102,15 +107,56 @@ export function varKinds(trace: Trace): Record<string, string> {
   return out
 }
 
+const EDGES_NAME = /^(edges?|connections|pairs)$/i
+const ADJACENCY_NAME = /^(adj|adjacency|adj_list|graph|neighbou?rs|g)$/i
+const GRAPH_POINTER = /^(node|u|v|cur|curr|current|start|src|source|root|neighbou?r|nei|nb|child|parent)$/i
+const isInt = (x: Snap) => typeof x === 'number' && Number.isInteger(x)
+
+/** A list of [a, b] integer pairs. */
+export const looksLikeEdges = (s: Snap | undefined): boolean =>
+  s !== undefined && isList(s) && s.v.length > 0 && s.v.every((e) => isList(e) && e.v.length === 2 && e.v.every(isInt))
+
+/** Does this variable hold a graph, judging by its name and its first value? Empty edge lists are recognised by name alone. */
+export function isGraphVar(name: string, first: Snap | undefined): boolean {
+  if (first === undefined || !isList(first) && !isDict(first)) return false
+  if (EDGES_NAME.test(name)) return isList(first)
+  if (ADJACENCY_NAME.test(name)) return true
+  return looksLikeEdges(first)
+}
+export const isAdjacencyName = (name: string) => ADJACENCY_NAME.test(name)
+
+/** Edges of a graph held as an edge list, an adjacency dict or an adjacency list (a list indexed by node). */
+export function graphEdges(value: Snap, adjacency: boolean): [number, number][] {
+  const out: [number, number][] = []
+  const seen = new Set<string>()
+  const add = (a: Snap, b: Snap) => {
+    if (!isInt(a) || !isInt(b)) return
+    const key = `${Math.min(a as number, b as number)}-${Math.max(a as number, b as number)}`
+    if (adjacency && seen.has(key)) return // an undirected adjacency lists every edge twice
+    seen.add(key)
+    out.push([a as number, b as number])
+  }
+  if (isDict(value)) {
+    for (const [k, nbrs] of value.v) if (isList(nbrs)) nbrs.v.forEach((x) => add(k, x))
+  } else if (isList(value)) {
+    if (adjacency) value.v.forEach((nbrs, i) => { if (isList(nbrs)) nbrs.v.forEach((x) => add(i, x)) })
+    else for (const e of value.v) if (isList(e) && e.v.length === 2) add(e.v[0], e.v[1])
+  }
+  return out
+}
+
 /** Heuristic mapping from variables to renderers. Used when there is no AI spec, or the AI spec is invalid. */
 export function inferViews(trace: Trace): ViewSpec[] {
   const kinds = varKinds(trace)
   const names = Object.keys(kinds)
   const ordered = [...trace.args.filter((a) => a in kinds), ...names.filter((n) => !trace.args.includes(n))]
+  const first = (name: string) => trace.steps.find((st) => name in st.locals && st.locals[name] !== null)?.locals[name]
   const views: ViewSpec[] = []
   for (const name of ordered) {
     const k = kinds[name]
-    if (k === 'list') views.push({ var: name, kind: STACK_NAME.test(name) ? 'stack' : 'array' })
+    if ((k === 'list' || k === 'dict') && isGraphVar(name, first(name))) views.push({ var: name, kind: 'graph' })
+    else if (k === 'linked') views.push({ var: name, kind: 'list' })
+    else if (k === 'list') views.push({ var: name, kind: STACK_NAME.test(name) ? 'stack' : 'array' })
     else if (k === 'str') views.push({ var: name, kind: 'string' })
     else if (k === 'dict' || k === 'set') views.push({ var: name, kind: 'map' })
     else if (k === 'tree') views.push({ var: name, kind: 'tree' })
@@ -118,6 +164,11 @@ export function inferViews(trace: Trace): ViewSpec[] {
   const pointers = names.filter((n) => kinds[n] === 'int' && POINTER_NAME.test(n))
   const firstSeq = views.find((v) => v.kind === 'array' || v.kind === 'string')
   if (firstSeq && pointers.length) firstSeq.pointers = pointers
+  const graphs = views.filter((v) => v.kind === 'graph')
+  const graph = graphs[0]
+  for (const extra of graphs.slice(1)) views.splice(views.indexOf(extra), 1) // an edge list and its adjacency list are one picture
+  const nodePointers = names.filter((n) => kinds[n] === 'int' && GRAPH_POINTER.test(n))
+  if (graph && nodePointers.length) graph.pointers = nodePointers
   return views.slice(0, 6)
 }
 

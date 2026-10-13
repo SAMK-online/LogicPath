@@ -33,7 +33,7 @@ describe('LandingPage', () => {
     renderPage()
     expect(screen.getByText('Python only.')).toBeInTheDocument()
     expect(screen.getByText('The tutor is an AI model.')).toBeInTheDocument()
-    expect(screen.getByText(/8 of 75 problems/)).toBeInTheDocument()
+    expect(screen.getByText(/14 of 75 problems/)).toBeInTheDocument()
   })
 
   it('shows the five hint levels in order', () => {

@@ -1,0 +1,123 @@
+{
+  "id": "reverse-linked-list",
+  "title": "Reverse Linked List",
+  "difficulty": "Easy",
+  "topic": "Linked lists",
+  "description": "Given the `head` of a singly linked list, reverse the list and return the new head.\n\nA `ListNode` class with `val` and `next` is provided for you. In the examples below, a list is written as a Python list of its values, from the head to the tail.",
+  "function_signature": {
+    "name": "reverse_list",
+    "params": [
+      {
+        "name": "head",
+        "type": "Optional[ListNode]"
+      }
+    ],
+    "return_type": "Optional[ListNode]"
+  },
+  "starter_code": "from typing import List, Optional\n\n\ndef reverse_list(head: Optional[ListNode]) -> Optional[ListNode]:\n    # ListNode(val, next) is already defined for you.\n    pass\n",
+  "examples": [
+    {
+      "input": "head = [1, 2, 3, 4, 5]",
+      "output": "[5, 4, 3, 2, 1]"
+    },
+    {
+      "input": "head = [1, 2]",
+      "output": "[2, 1]"
+    },
+    {
+      "input": "head = []",
+      "output": "[]"
+    }
+  ],
+  "constraints": [
+    "`0 <= number of nodes <= 5000`",
+    "`-5000 <= Node.val <= 5000`"
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      ],
+      "expected": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "id": 2,
+      "args": [
+        [
+          1,
+          2
+        ]
+      ],
+      "expected": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "args": [
+        []
+      ],
+      "expected": []
+    },
+    {
+      "id": 4,
+      "args": [
+        [
+          7
+        ]
+      ],
+      "expected": [
+        7
+      ]
+    },
+    {
+      "id": 5,
+      "args": [
+        [
+          5,
+          4,
+          3,
+          2,
+          1
+        ]
+      ],
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "id": 6,
+      "args": [
+        [
+          1,
+          1,
+          2
+        ]
+      ],
+      "expected": [
+        2,
+        1,
+        1
+      ]
+    }
+  ]
+}

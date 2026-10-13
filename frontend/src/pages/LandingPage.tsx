@@ -20,14 +20,14 @@ const HINTS = [
 
 const ROADMAPS = [
   { id: 'python-foundations', title: 'Python Foundations', level: 'Beginner', ready: '12 of 12 problems', text: 'Variables, conditions, loops, functions, strings and lists, taught through small problems.' },
-  { id: 'dsa-fundamentals', title: 'DSA Fundamentals', level: 'Intermediate', ready: '11 of 11 problems', text: 'Searching, hashing, windows, recursion and trees, with attention to correctness and complexity.' },
-  { id: 'blind-75', title: 'Blind 75', level: 'Advanced', ready: '8 of 75 problems', text: 'The well-known interview list. The full list is shown, and the problems that are not built yet are marked coming soon.' },
+  { id: 'dsa-fundamentals', title: 'DSA Fundamentals', level: 'Intermediate', ready: '17 of 17 problems', text: 'Searching, hashing, windows, recursion, linked lists, trees and graphs, with attention to correctness and complexity.' },
+  { id: 'blind-75', title: 'Blind 75', level: 'Advanced', ready: '14 of 75 problems', text: 'The well-known interview list. The full list is shown, and the problems that are not built yet are marked coming soon.' },
 ] as const
 
 const LIMITS = [
   ['Python only.', 'Other languages are not supported.'],
   ['The tutor is an AI model.', 'It can be wrong. Your tests are the source of truth, so treat its questions as prompts to think, not as verdicts.'],
-  ['Blind 75 is partly built.', 'Eight of the 75 problems are available today.'],
+  ['Blind 75 is partly built.', 'Fourteen of the 75 problems are available today.'],
   ['The first run is slower.', 'Your browser downloads the Python runtime once, which takes a few seconds. After that it is cached.'],
   ['Not every problem has speed tests.', 'Five beginner problems are constant or linear by nature, so they only check correctness.'],
 ] as const
@@ -175,7 +175,7 @@ export function LandingPage() {
               Most problems with a meaningful speed difference include tests at the largest size the constraints allow, each with a time limit. A nested loop that is correct on small inputs passes the first tests and fails the large one. The result says which input failed and how long it took. It does not tell you the faster method.
             </p>
             <p className="mt-4 max-w-lg leading-relaxed text-slate-muted">
-              That applies to 18 of the 23 problems that exist today. Binary Search is checked differently: it counts how many items your code looks at, because a linear scan is still fast on a million numbers.
+              That applies to 20 of the 29 problems that exist today. Binary Search is checked differently: it counts how many items your code looks at, because a linear scan is still fast on a million numbers.
             </p>
           </div>
           <table className="w-full border-y border-line text-left text-sm">

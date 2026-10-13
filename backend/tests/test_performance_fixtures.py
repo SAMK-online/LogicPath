@@ -15,7 +15,9 @@ from tests.solutions import BRUTE, OPTIMAL
 
 HARNESS = Path(__file__).resolve().parents[2] / "frontend" / "src" / "workers" / "harness.py"
 HERE = Path(__file__).resolve().parent
-NO_PERF = {"celsius-to-fahrenheit", "leap-year", "fizzbuzz", "sum-of-digits", "factorial"}  # constant/linear by nature: no brute-vs-optimal gap
+NO_PERF = {"celsius-to-fahrenheit", "leap-year", "fizzbuzz", "sum-of-digits", "factorial",
+           # linear by nature, and at the sizes the constraints allow a brute-force version is no slower: no brute-vs-optimal gap
+           "same-tree", "binary-tree-level-order-traversal", "reverse-linked-list", "merge-two-sorted-lists"}
 
 
 @pytest.fixture(scope="module")

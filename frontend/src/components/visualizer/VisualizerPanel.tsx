@@ -3,7 +3,8 @@ import { api, errorMessage } from '../../services/api'
 import type { PythonRunner } from '../../services/pythonRunner'
 import { DEFAULT_MAX_STEPS } from '../../services/pythonRunner'
 import { captionAt, changedVars, compactTrace, fmt, inferViews, parseSpec, varKinds, type Trace, type VisualSpec } from '../../services/trace'
-import type { Problem } from '../../types/api'
+import { caseName, isCustom } from '../../services/customCases'
+import type { Problem, TestCase } from '../../types/api'
 import { Spinner } from '../ui'
 import { ViewRenderer } from './renderers/ViewRenderer'
 import { Stepper } from './Stepper'
@@ -18,14 +19,19 @@ interface Props {
   runner: PythonRunner
   onHighlightLine: (line: number | null) => void
   onSynced: (code: string) => void
+  /** the student's own experimental cases (memory only): they can be drawn and traced, but never go to the AI */
+  extraCases?: TestCase[]
+  /** ask the panel to open one case and trace it; `n` changes on every request so asking twice still works */
+  focus?: { id: number; n: number } | null
+  onFocusHandled?: () => void
 }
 
 type Mode = 'case' | 'trace'
 
-export default function VisualizerPanel({ problem, code, savedCode, sessionId, runner, onHighlightLine, onSynced }: Props) {
+export default function VisualizerPanel({ problem, code, savedCode, sessionId, runner, onHighlightLine, onSynced, extraCases = [], focus = null, onFocusHandled }: Props) {
   const [mode, setMode] = useState<Mode>('case')
   // Constraint-sized performance tests are for timing, not for drawing: the picker only offers the ordinary cases.
-  const drawable = useMemo(() => problem.test_cases.filter((t) => !t.perf), [problem.test_cases])
+  const drawable = useMemo(() => [...problem.test_cases.filter((t) => !t.perf), ...extraCases], [problem.test_cases, extraCases])
   const [testId, setTestId] = useState(drawable[0]?.id ?? 0)
   const [trace, setTrace] = useState<Trace | null>(null)
   const [tracedCode, setTracedCode] = useState('')
@@ -58,11 +64,11 @@ export default function VisualizerPanel({ problem, code, savedCode, sessionId, r
   clear.current = onHighlightLine
   useEffect(() => () => clear.current(null), [])
 
-  async function runTrace() {
-    if (!test) return
+  async function runTrace(which: TestCase | undefined = test) {
+    if (!which) return
     setTracing(true); setTraceError(null); setSpec(null); setAiNotice(null); setPlaying(false)
     try {
-      const t = await runner.trace({ code, signature: problem.function_signature, test, maxSteps: DEFAULT_MAX_STEPS })
+      const t = await runner.trace({ code, signature: problem.function_signature, test: which, maxSteps: DEFAULT_MAX_STEPS })
       setTrace(t); setTracedCode(code); setIndex(0)
       if (t.error) setTraceError(t.error) // runtime errors and truncation keep the steps that did run viewable
     } catch (e) {
@@ -72,6 +78,21 @@ export default function VisualizerPanel({ problem, code, savedCode, sessionId, r
       setTracing(false)
     }
   }
+
+  // "Visualize" on a custom case: open it and trace it straight away.
+  const traceRef = useRef(runTrace)
+  traceRef.current = runTrace
+  const lastFocus = useRef(0)
+  useEffect(() => {
+    if (!focus || focus.n === lastFocus.current) return
+    const target = drawable.find((t) => t.id === focus.id)
+    if (!target) return
+    lastFocus.current = focus.n
+    selectTest(target.id); setMode('trace')
+    onFocusHandled?.()
+    void traceRef.current(target)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focus])
 
   const onIndex = useCallback((i: number) => setIndex(i), [])
 
@@ -112,7 +133,7 @@ export default function VisualizerPanel({ problem, code, savedCode, sessionId, r
         <div role="tablist" aria-label="Visualizer mode" className="flex gap-0.5 rounded-lg bg-paper p-0.5">{tab('case', 'Test case')}{tab('trace', 'Step through my code')}</div>
         <label className="flex items-center gap-2 text-xs text-slate-muted">Test case
           <select value={test.id} onChange={(e) => selectTest(Number(e.target.value))} className="rounded-md border border-line bg-white px-2 py-1 text-sm text-navy">
-            {drawable.map((t) => <option key={t.id} value={t.id}>#{t.id}</option>)}
+            {drawable.map((t) => <option key={t.id} value={t.id}>{caseName(t)}</option>)}
           </select>
         </label>
       </div>
@@ -122,12 +143,12 @@ export default function VisualizerPanel({ problem, code, savedCode, sessionId, r
       {mode === 'trace' && (
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
-            <button className="btn-accent !py-1.5 text-xs" onClick={runTrace} disabled={tracing}>{tracing ? 'Tracing…' : trace ? 'Trace again' : 'Trace my code'}</button>
-            <button className="btn-ghost !py-1.5 text-xs" onClick={aiView} disabled={!trace || trace.steps.length === 0 || aiBusy}
-              title="Asks the AI to pick the best views and write short captions. Uses one tutor request.">
+            <button className="btn-accent !py-1.5 text-xs" onClick={() => void runTrace()} disabled={tracing}>{tracing ? 'Tracing…' : trace ? 'Trace again' : 'Trace my code'}</button>
+            <button className="btn-ghost !py-1.5 text-xs" onClick={aiView} disabled={!trace || trace.steps.length === 0 || aiBusy || isCustom(test)}
+              title={isCustom(test) ? 'AI captions are only available for the built-in test cases.' : 'Asks the AI to pick the best views and write short captions. Uses one tutor request.'}>
               {aiBusy ? 'Asking AI…' : '✨ AI view & captions'}
             </button>
-            <span className="text-xs text-slate-muted">Runs your current code on test #{test.id}. Nothing is sent to the AI unless you click the sparkle button.</span>
+            <span className="text-xs text-slate-muted">Runs your current code on {isCustom(test) ? test.label : `test #${test.id}`}. Nothing is sent to the AI unless you click the sparkle button.</span>
           </div>
 
           {tracing && <Spinner label="Tracing your code…" />}
@@ -150,7 +171,7 @@ export default function VisualizerPanel({ problem, code, savedCode, sessionId, r
               </div>
               {index === trace.steps.length - 1 && (
                 <p className="text-xs text-slate-muted" data-testid="trace-end">
-                  Finished. Your function returned <code className="font-mono">{fmt(trace.result, 80)}</code>; the test expected <code className="font-mono">{fmt(trace.expected, 80)}</code>.
+                  Finished. Your function returned <code className="font-mono">{fmt(trace.result, 80)}</code>{test.unchecked ? '.' : <>; the test expected <code className="font-mono">{fmt(trace.expected, 80)}</code>.</>}
                 </p>
               )}
               {trace.stdout && <details><summary className="cursor-pointer text-xs text-slate-muted">Printed output</summary><pre className="mt-1 max-h-32 overflow-auto rounded bg-navy-50 p-2 font-mono text-xs">{trace.stdout}</pre></details>}

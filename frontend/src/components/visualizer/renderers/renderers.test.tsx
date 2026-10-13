@@ -15,14 +15,15 @@ describe('ArrayView', () => {
     render(<ArrayView value={list(2, 7, 11)} pointers={[{ name: 'lo', index: 0 }, { name: 'i', index: 0 }, { name: 'hi', index: 2 }]} />)
     expect(screen.getAllByRole('listitem')).toHaveLength(3)
     expect(screen.getByLabelText('index 1: 7')).toBeInTheDocument()
-    expect(screen.getByText('▲ lo,i')).toBeInTheDocument()
+    expect(screen.getByText('▲ lo')).toBeInTheDocument()
+    expect(screen.getByText('▲ i')).toBeInTheDocument()
     expect(screen.getByText('▲ hi')).toBeInTheDocument()
   })
 
   it('highlights only the cells that changed', () => {
     render(<ArrayView value={list(1, 9, 3)} prev={list(1, 2, 3)} />)
-    expect(screen.getByLabelText('index 1: 9').className).toContain('bg-copper-50')
-    expect(screen.getByLabelText('index 0: 1').className).not.toContain('bg-copper-50')
+    expect(screen.getByLabelText('index 1: 9')).toHaveAttribute('data-changed', 'true')
+    expect(screen.getByLabelText('index 0: 1')).toHaveAttribute('data-changed', 'false')
   })
 
   it('notes pointers that are outside the array and truncated lists', () => {
@@ -36,6 +37,25 @@ describe('ArrayView', () => {
     expect(screen.getByLabelText('index 2: "c"')).toBeInTheDocument()
     rerender(<ArrayView value={5} />)
     expect(screen.getByText(/Not a list right now/)).toBeInTheDocument()
+  })
+})
+
+describe('ArrayView commands', () => {
+  it('draws an arc and says so when two cells swap', () => {
+    render(<ArrayView value={list(3, 2, 1)} prev={list(1, 2, 3)} />)
+    expect(screen.getAllByTestId('swap-arc')).toHaveLength(1)
+    expect(screen.getByTestId('actions')).toHaveTextContent('index 0 and index 2 swap values')
+  })
+
+  it('describes pointer moves and value changes without drawing a swap', () => {
+    render(<ArrayView value={list(1, 9, 3)} prev={list(1, 2, 3)} pointers={[{ name: 'lo', index: 2 }]} prevPointers={[{ name: 'lo', index: 0 }]} />)
+    expect(screen.queryByTestId('swap-arc')).not.toBeInTheDocument()
+    expect(screen.getByTestId('actions')).toHaveTextContent('index 1 changes from 2 to 9; lo moves from 0 to 2')
+  })
+
+  it('stays quiet on the first step', () => {
+    render(<ArrayView value={list(1, 2)} pointers={[{ name: 'i', index: 0 }]} />)
+    expect(screen.queryByTestId('actions')).not.toBeInTheDocument()
   })
 })
 
@@ -111,5 +131,41 @@ describe('ViewRenderer', () => {
     expect(screen.getByText('Not defined yet at this step.')).toBeInTheDocument()
     rerender(<ViewRenderer view={{ var: 'total', kind: 'scalar' }} step={{ locals: { total: 42 } }} />)
     expect(screen.getByText('42')).toBeInTheDocument()
+  })
+})
+
+describe('linked lists and graphs', () => {
+  const step = (locals: Record<string, Snap>) => ({ locals })
+  const pairs = (...e: [number, number][]): Snap => ({ t: 'list', n: e.length, v: e.map(([a, b]) => ({ t: 'list', n: 2, v: [a, b] }) as Snap) })
+
+  it('draws a linked list ending in None, and marks one that never ends', () => {
+    const { rerender } = render(<ViewRenderer view={{ var: 'head', kind: 'list' }} step={step({ head: { t: 'linked', n: 3, v: [1, 2, 3] } })} />)
+    expect(screen.getAllByRole('listitem')).toHaveLength(3)
+    expect(screen.getByText('None')).toBeInTheDocument()
+    rerender(<ViewRenderer view={{ var: 'head', kind: 'list' }} step={step({ head: { t: 'linked', n: 1, v: [1], more: true } })} />)
+    expect(screen.getByText(/loops back/)).toBeInTheDocument()
+  })
+
+  it('draws a graph with the nodes the code is on and the nodes it has marked', () => {
+    const view = { var: 'edges', kind: 'graph' as const, pointers: ['node'] }
+    render(<ViewRenderer view={view} step={step({
+      n: 4, edges: pairs([0, 1], [1, 2]), node: 1, seen: { t: 'set', n: 2, v: [0, 1] },
+    })} />)
+    const scene = screen.getByTestId('graph-scene')
+    expect(scene.querySelectorAll('line')).toHaveLength(2)
+    expect(scene.querySelector('[data-node="1"]')).toHaveAttribute('data-state', 'current')
+    expect(scene.querySelector('[data-node="0"]')).toHaveAttribute('data-state', 'visited')
+    expect(scene.querySelector('[data-node="3"]')).toHaveAttribute('data-state', 'idle') // n = 4 makes node 3 exist even without edges
+    expect(screen.getByText(/4 nodes, 2 edges/)).toBeInTheDocument()
+  })
+
+  it('reads a list of booleans as marked nodes and an adjacency dict as edges', () => {
+    render(<ViewRenderer view={{ var: 'adj', kind: 'graph' }} step={step({
+      adj: { t: 'dict', n: 2, v: [[0, { t: 'list', n: 1, v: [1] }], [1, { t: 'list', n: 1, v: [0] }]] }, visited: { t: 'list', n: 2, v: [true, false] },
+    })} />)
+    const scene = screen.getByTestId('graph-scene')
+    expect(scene.querySelectorAll('line')).toHaveLength(1) // an undirected edge is listed twice but drawn once
+    expect(scene.querySelector('[data-node="0"]')).toHaveAttribute('data-state', 'visited')
+    expect(scene.querySelector('[data-node="1"]')).toHaveAttribute('data-state', 'idle')
   })
 })

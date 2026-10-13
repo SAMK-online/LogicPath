@@ -33,6 +33,36 @@ def _dump_tree(root):
         out.pop()
     return out
 
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def _build_list(values):
+    head = None
+    for v in reversed(values):
+        head = ListNode(v, head)
+    return head
+
+def _dump_list(head):
+    if head is not None and not isinstance(head, ListNode):
+        raise TypeError(f"Return the head of the list (a ListNode or None), not a {type(head).__name__}.")
+    out, seen = [], set()
+    while head is not None:
+        if id(head) in seen:
+            raise ValueError("The list you returned loops back on itself, so it has no end.")
+        seen.add(id(head))
+        out.append(head.val)
+        head = head.next
+    return out
+
+def _converters(sig):
+    """How to turn each parameter's JSON into the object the student's function expects, and the return value back into JSON."""
+    def kind(t):
+        return "tree" if t.startswith("Optional[TreeNode]") else "list" if t.startswith("Optional[ListNode]") else None
+    build = {"tree": _build_tree, "list": _build_list, None: None}
+    return [build[kind(p["type"])] for p in sig["params"]], {"tree": _dump_tree, "list": _dump_list, None: None}[kind(sig["return_type"])]
+
 def _eq(actual, expected):
     if isinstance(expected, bool):
         return isinstance(actual, bool) and actual == expected
@@ -128,6 +158,18 @@ def _gen(spec):
         return {k: spec["value"] for k in _expand(spec["keys"])}
     if kind == "counting_list":
         return _CountingList(_expand(spec["of"]))
+    if kind == "random_tree_edges":  # a random tree on n nodes as an edge list: node i hangs off a random earlier node
+        r = _Rng(spec["seed"])
+        return [[r.below(i), i] for i in range(1, spec["n"])]
+    if kind == "random_edges":  # m distinct undirected edges between n nodes
+        r, seen, out = _Rng(spec["seed"]), set(), []
+        while len(out) < spec["m"]:
+            a, b = r.below(spec["n"]), r.below(spec["n"])
+            if a == b or (min(a, b), max(a, b)) in seen:
+                continue
+            seen.add((min(a, b), max(a, b)))
+            out.append([a, b])
+        return out
     if kind == "skewed_tree":  # right-leaning chain 1 -> 2 -> ... -> n, as a level-order list
         out = [1]
         for v in range(2, spec["n"] + 1):
@@ -199,7 +241,7 @@ def _load_student(code, fn_name, out):
         compiled = compile(code, "<solution>", "exec")
     except SyntaxError as e:
         return None, f"SyntaxError: {e.msg} (line {e.lineno})" + (f"\n{e.text.rstrip()}" if e.text else "")
-    ns = {"__name__": "__student__", "TreeNode": TreeNode}
+    ns = {"__name__": "__student__", "TreeNode": TreeNode, "ListNode": ListNode}
     try:
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(out):
             exec(compiled, ns)
@@ -213,8 +255,7 @@ def _load_student(code, fn_name, out):
 def _run(payload):
     code, sig, tests, comparison = payload["code"], payload["signature"], payload["tests"], payload["comparison"]
     fn_name = sig["name"]
-    tree_params = [p["type"].startswith("Optional[TreeNode]") for p in sig["params"]]
-    tree_return = sig["return_type"].startswith("Optional[TreeNode]")
+    builders, dump_return = _converters(sig)
     out = io.StringIO()
     builtins_snapshot = dict(builtins.__dict__)
     modules_snapshot = set(sys.modules)
@@ -233,7 +274,7 @@ def _run(payload):
             expected = _expand(t["expected"]) if _has_gen(t["expected"]) else t["expected"]
             shown = ", ".join(f"{n}={_describe(a)}" for n, a in zip(names, args))
             counters = [a for a in args if isinstance(a, _CountingList)]
-            args = [_build_tree(a) if is_tree else a for a, is_tree in zip(args, tree_params)]
+            args = [b(a) if b else a for a, b in zip(args, builders)]
             case = {"id": t["id"], "input": shown, "expected": _describe(expected), "actual": "", "passed": False, "error": None,
                     "perf": bool(t.get("perf")), "label": t.get("label"), "ms": None, "timed_out": False}
             _notify({"start": {"id": t["id"], "input": shown, "label": t.get("label"), "perf": case["perf"]}})
@@ -243,29 +284,33 @@ def _run(payload):
                     actual = fn(*args)
                     elapsed = int((time.perf_counter() - t0) * 1000)
                 case["ms"] = elapsed
-                if tree_return:
-                    actual = _dump_tree(actual)
+                if dump_return:
+                    actual = dump_return(actual)
                 case["actual"] = _describe(actual)
-                exp = expected
-                if comparison == "sorted" and isinstance(actual, (list, tuple)) and isinstance(exp, list):
-                    try:
-                        actual, exp = sorted(actual), sorted(exp)
-                    except TypeError:
-                        pass
-                case["passed"] = _eq(actual, exp)
-                # Correctness first; only a correct answer is judged on speed or work done.
-                limit, budget = t.get("time_limit_ms"), t.get("max_accesses")
-                if case["passed"] and limit and elapsed > limit:
-                    case["passed"], case["timed_out"] = False, True
-                    case["error"] = (f"Time limit exceeded: took {_human_ms(elapsed)}, the limit is {_human_ms(limit)}. "
-                                     "This input is within the constraints, so the solution has to scale to it. "
-                                     "How does the work your code does grow with the size of the input?")
-                if case["passed"] and budget is not None and counters:
-                    used = sum(c.accesses for c in counters)
-                    if used > budget:
-                        case["passed"] = False
-                        case["error"] = (f"Your code looked at {used:,} of the {max(len(c) for c in counters):,} items; this test allows at most {budget:,}. "
-                                         "The problem asks for O(log n) time. How many items does each step of your search need to look at?")
+                if t.get("unchecked"):
+                    # A student's own experiment with no expected answer: show what the function returned, judge nothing.
+                    case["passed"], case["expected"] = True, ""
+                else:
+                    exp = expected
+                    if comparison == "sorted" and isinstance(actual, (list, tuple)) and isinstance(exp, list):
+                        try:
+                            actual, exp = sorted(actual), sorted(exp)
+                        except TypeError:
+                            pass
+                    case["passed"] = _eq(actual, exp)
+                    # Correctness first; only a correct answer is judged on speed or work done.
+                    limit, budget = t.get("time_limit_ms"), t.get("max_accesses")
+                    if case["passed"] and limit and elapsed > limit:
+                        case["passed"], case["timed_out"] = False, True
+                        case["error"] = (f"Time limit exceeded: took {_human_ms(elapsed)}, the limit is {_human_ms(limit)}. "
+                                         "This input is within the constraints, so the solution has to scale to it. "
+                                         "How does the work your code does grow with the size of the input?")
+                    if case["passed"] and budget is not None and counters:
+                        used = sum(c.accesses for c in counters)
+                        if used > budget:
+                            case["passed"] = False
+                            case["error"] = (f"Your code looked at {used:,} of the {max(len(c) for c in counters):,} items; this test allows at most {budget:,}. "
+                                             "The problem asks for O(log n) time. How many items does each step of your search need to look at?")
             except BaseException as e:
                 case["error"] = _fmt_exc(e)
             passed += case["passed"]
@@ -299,6 +344,8 @@ def _snap(v, depth=0):
             return v if len(v) <= _MAX_STR else v[:_MAX_STR] + "..."
         if isinstance(v, TreeNode):
             return {"t": "tree", "v": _dump_tree_limited(v)}
+        if isinstance(v, ListNode):
+            return _snap_linked(v)
         if depth >= _MAX_DEPTH:
             return {"t": "obj", "v": _short(v, 40)}
         if isinstance(v, (list, tuple)):
@@ -315,6 +362,21 @@ def _snap(v, depth=0):
         return {"t": "obj", "v": _short(v, 60)}
     except Exception:
         return {"t": "obj", "v": "<unprintable>"}
+
+def _snap_linked(head, limit=_MAX_ITEMS):
+    """A linked list as its values in order. `loop` marks a list that never ends (a cycle) or is longer than we draw."""
+    vals, seen, node, loop = [], set(), head, False
+    while node is not None and len(vals) < limit:
+        if id(node) in seen:
+            loop = True
+            break
+        seen.add(id(node))
+        vals.append(_snap(node.val, _MAX_DEPTH))
+        node = node.next
+    snap = {"t": "linked", "n": len(vals), "v": vals}
+    if loop or node is not None:
+        snap["more"] = True
+    return snap
 
 def _dump_tree_limited(root, limit=63):
     out, q, count = [], [root], 0
@@ -341,8 +403,7 @@ def _visible_locals(frame):
 def _trace(payload):
     code, sig, test, max_steps = payload["code"], payload["signature"], payload["test"], int(payload.get("maxSteps", 500))
     fn_name = sig["name"]
-    tree_params = [p["type"].startswith("Optional[TreeNode]") for p in sig["params"]]
-    tree_return = sig["return_type"].startswith("Optional[TreeNode]")
+    builders, dump_return = _converters(sig)
     names = [p["name"] for p in sig["params"]]
     out = io.StringIO()
     builtins_snapshot = dict(builtins.__dict__)
@@ -384,7 +445,7 @@ def _trace(payload):
             res["error"] = load_error
             return res
         args = _expand(test["args"]) if _has_gen(test["args"]) else copy.deepcopy(test["args"])
-        args = [_build_tree(a) if is_tree else a for a, is_tree in zip(args, tree_params)]
+        args = [b(a) if b else a for a, b in zip(args, builders)]
         res["status"] = "ok"
         try:
             sys.settrace(global_tracer)
@@ -393,7 +454,7 @@ def _trace(payload):
                     value = fn(*args)
             finally:
                 sys.settrace(None)
-            res["result"] = _snap(_dump_tree(value) if tree_return else value)
+            res["result"] = _snap(dump_return(value) if dump_return else value)
         except _TraceStop:
             res["error"] = f"Trace stopped after {max_steps} steps. Your code may be looping, or it just runs for a long time."
         except BaseException as e:

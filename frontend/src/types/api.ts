@@ -20,6 +20,8 @@ export interface TestCase {
   id: number; args: unknown[]; expected: unknown
   /** a constraint-sized test: a correct but slow solution fails it */
   perf?: boolean; label?: string; time_limit_ms?: number; max_accesses?: number
+  /** a student's own experiment (client-side only): nothing is expected, so nothing is judged */
+  unchecked?: boolean
 }
 export interface Example { input: string; output: string; explanation?: string }
 export interface Problem {

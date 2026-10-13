@@ -63,7 +63,7 @@
     "id": "dsa-fundamentals",
     "title": "DSA Fundamentals",
     "difficulty": "Intermediate",
-    "description": "Learn the core data structures and algorithmic patterns: hash maps, two pointers, sliding window, stacks, binary search, recursion and trees.",
+    "description": "Learn the core data structures and algorithmic patterns: hash maps, two pointers, sliding window, stacks, binary search, recursion, linked lists, trees and graphs.",
     "topics": [
       {
         "name": "Arrays",
@@ -110,10 +110,26 @@
         ]
       },
       {
+        "name": "Linked lists",
+        "problems": [
+          "reverse-linked-list",
+          "merge-two-sorted-lists"
+        ]
+      },
+      {
         "name": "Trees",
         "problems": [
           "maximum-depth-of-binary-tree",
-          "invert-binary-tree"
+          "invert-binary-tree",
+          "same-tree",
+          "binary-tree-level-order-traversal"
+        ]
+      },
+      {
+        "name": "Graphs",
+        "problems": [
+          "number-of-connected-components-in-an-undirected-graph",
+          "graph-valid-tree"
         ]
       }
     ]

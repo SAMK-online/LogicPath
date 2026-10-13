@@ -9,9 +9,9 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from app.schemas.learning import MAX_CODE_CHARS
 
 IDENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]{0,40}$")
-VIEW_KINDS = ("array", "string", "map", "stack", "list", "tree", "scalar")
-VAR_KINDS = ("int", "float", "bool", "none", "str", "list", "set", "dict", "tree", "obj")
-ViewKind = Literal["array", "string", "map", "stack", "list", "tree", "scalar"]
+VIEW_KINDS = ("array", "string", "map", "stack", "list", "tree", "graph", "scalar")
+VAR_KINDS = ("int", "float", "bool", "none", "str", "list", "set", "dict", "tree", "linked", "obj")
+ViewKind = Literal["array", "string", "map", "stack", "list", "tree", "graph", "scalar"]
 _NO_MARKUP = re.compile(r"[<>]|```")
 
 

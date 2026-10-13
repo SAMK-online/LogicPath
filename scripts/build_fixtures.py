@@ -148,6 +148,45 @@ def ref_invert_tree(root):
         stack += [c for c in (n.left, n.right) if c]
     return _dump(r)
 
+def ref_same_tree(p, q):
+    def same(a, b):
+        if a is None or b is None:
+            return a is b
+        return a.val == b.val and same(a.left, b.left) and same(a.right, b.right)
+    return same(_build(p), _build(q))
+def ref_level_order(root):
+    r = _build(root)
+    out, level = [], ([r] if r else [])
+    while level:
+        out.append([n.val for n in level])
+        level = [c for n in level for c in (n.left, n.right) if c]
+    return out
+def ref_reverse_list(head): return list(reversed(head))
+def ref_merge_two_lists(list1, list2):
+    out, i, j = [], 0, 0
+    while i < len(list1) and j < len(list2):
+        if list1[i] <= list2[j]:
+            out.append(list1[i]); i += 1
+        else:
+            out.append(list2[j]); j += 1
+    return out + list1[i:] + list2[j:]
+def _components(n, edges):
+    parent = list(range(n))
+    def find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+    count = n
+    for a, b in edges:
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            parent[ra] = rb
+            count -= 1
+    return count
+def ref_count_components(n, edges): return _components(n, edges)
+def ref_valid_tree(n, edges): return len(edges) == n - 1 and _components(n, edges) == 1
+
 
 # ---------------------------------------------------------------------------
 # Problem definitions
@@ -333,9 +372,54 @@ problems += [
       [[[4, 2, 7, 1, 3, 6, 9]], [[2, 1, 3]], [[]], [[1, 2]], [[1, None, 2]]], ref_invert_tree),
 ]
 
+# ---- More trees, linked lists and graphs -------------------------------------
+problems += [
+    P("same-tree", "Same Tree", "Easy", "Trees",
+      "Given the roots of two binary trees `p` and `q`, return `True` if they are the **same tree**: the same shape, and the same value in every matching node. Otherwise return `False`.\n\nA `TreeNode` class with `val`, `left` and `right` is provided for you. In the examples below, trees are written in level-order with `None` for a missing child.",
+      "is_same_tree", [("p", "Optional[TreeNode]"), ("q", "Optional[TreeNode]")], "bool", PASS,
+      [ex("p = [1, 2, 3], q = [1, 2, 3]", "True"), ex("p = [1, 2], q = [1, None, 2]", "False", "The shapes differ: 2 is a left child in one tree and a right child in the other.")],
+      ["`0 <= number of nodes in each tree <= 100`", "`-10**4 <= Node.val <= 10**4`"],
+      [[[1, 2, 3], [1, 2, 3]], [[1, 2], [1, None, 2]], [[1, 2, 1], [1, 1, 2]], [[], []], [[1], []], [[4, 2, 7, 1, 3, 6, 9], [4, 2, 7, 1, 3, 6, 9]],
+       [[1, None, 2], [1, None, 2]], [[1, 2, 3], [1, 2, 4]]], ref_same_tree),
+    P("binary-tree-level-order-traversal", "Binary Tree Level Order Traversal", "Medium", "Trees",
+      "Given the `root` of a binary tree, return its **level order traversal**: a list of lists, where each inner list holds the values of one level from left to right, starting at the root.\n\nA `TreeNode` class with `val`, `left` and `right` is provided for you. In the examples below, trees are written in level-order with `None` for a missing child.",
+      "level_order", [("root", "Optional[TreeNode]")], "List[List[int]]", PASS,
+      [ex("root = [3, 9, 20, None, None, 15, 7]", "[[3], [9, 20], [15, 7]]"), ex("root = [1]", "[[1]]"), ex("root = []", "[]")],
+      ["`0 <= number of nodes <= 2000`", "`-1000 <= Node.val <= 1000`"],
+      [[[3, 9, 20, None, None, 15, 7]], [[1]], [[]], [[1, 2, 3, 4, 5]], [[1, None, 2, None, 3]], [[1, 2, None, 3]], [[5, 4, 8, 11, None, 13, 4, 7, 2]]], ref_level_order),
+    P("reverse-linked-list", "Reverse Linked List", "Easy", "Linked lists",
+      "Given the `head` of a singly linked list, reverse the list and return the new head.\n\nA `ListNode` class with `val` and `next` is provided for you. In the examples below, a list is written as a Python list of its values, from the head to the tail.",
+      "reverse_list", [("head", "Optional[ListNode]")], "Optional[ListNode]", PASS,
+      [ex("head = [1, 2, 3, 4, 5]", "[5, 4, 3, 2, 1]"), ex("head = [1, 2]", "[2, 1]"), ex("head = []", "[]")],
+      ["`0 <= number of nodes <= 5000`", "`-5000 <= Node.val <= 5000`"],
+      [[[1, 2, 3, 4, 5]], [[1, 2]], [[]], [[7]], [[5, 4, 3, 2, 1]], [[1, 1, 2]]], ref_reverse_list),
+    P("merge-two-sorted-lists", "Merge Two Sorted Lists", "Easy", "Linked lists",
+      "You are given the heads of two sorted linked lists, `list1` and `list2`. Merge them into one sorted list by splicing together the nodes of the two lists, and return the head of the merged list.\n\nA `ListNode` class with `val` and `next` is provided for you. In the examples below, a list is written as a Python list of its values, from the head to the tail.",
+      "merge_two_lists", [("list1", "Optional[ListNode]"), ("list2", "Optional[ListNode]")], "Optional[ListNode]", PASS,
+      [ex("list1 = [1, 2, 4], list2 = [1, 3, 4]", "[1, 1, 2, 3, 4, 4]"), ex("list1 = [], list2 = [0]", "[0]")],
+      ["`0 <= number of nodes in each list <= 50`", "`-100 <= Node.val <= 100`", "Both lists are sorted in non-decreasing order."],
+      [[[1, 2, 4], [1, 3, 4]], [[], []], [[], [0]], [[5], [1, 2, 3]], [[1, 3, 5], [2, 4, 6]], [[1, 1], [1, 1]]], ref_merge_two_lists),
+    P("number-of-connected-components-in-an-undirected-graph", "Number of Connected Components in an Undirected Graph", "Medium", "Graphs",
+      "You have a graph of `n` nodes labelled `0` to `n - 1`, and a list `edges` where `edges[i] = [a, b]` means there is an undirected edge between nodes `a` and `b`.\n\nReturn the number of **connected components** in the graph: groups of nodes that can reach each other along edges. A node with no edges is a component of its own.",
+      "count_components", [("n", "int"), ("edges", "List[List[int]]")], "int", PASS,
+      [ex("n = 5, edges = [[0, 1], [1, 2], [3, 4]]", "2", "Nodes 0, 1, 2 are one component and nodes 3, 4 are another."), ex("n = 5, edges = [[0, 1], [1, 2], [2, 3], [3, 4]]", "1")],
+      ["`1 <= n <= 2000`", "`0 <= len(edges) <= 5000`", "`0 <= a, b < n` and `a != b`", "There are no repeated edges."],
+      [[5, [[0, 1], [1, 2], [3, 4]]], [5, [[0, 1], [1, 2], [2, 3], [3, 4]]], [1, []], [4, []], [6, [[0, 1], [2, 3], [4, 5]]],
+       [5, [[0, 4], [1, 4], [2, 4], [3, 4]]], [4, [[0, 1], [1, 2], [2, 0]]]], ref_count_components),
+    P("graph-valid-tree", "Graph Valid Tree", "Medium", "Graphs",
+      "You have a graph of `n` nodes labelled `0` to `n - 1`, and a list `edges` where `edges[i] = [a, b]` means there is an undirected edge between nodes `a` and `b`.\n\nReturn `True` if the edges make up a **valid tree**: every node is connected to every other, and there are no cycles. Otherwise return `False`.",
+      "valid_tree", [("n", "int"), ("edges", "List[List[int]]")], "bool", PASS,
+      [ex("n = 5, edges = [[0, 1], [0, 2], [0, 3], [1, 4]]", "True"), ex("n = 5, edges = [[0, 1], [1, 2], [2, 3], [1, 3], [1, 4]]", "False", "Nodes 1, 2 and 3 form a cycle.")],
+      ["`1 <= n <= 2000`", "`0 <= len(edges) <= 5000`", "`0 <= a, b < n` and `a != b`", "There are no repeated edges."],
+      [[5, [[0, 1], [0, 2], [0, 3], [1, 4]]], [5, [[0, 1], [1, 2], [2, 3], [1, 3], [1, 4]]], [1, []], [2, []], [4, [[0, 1], [2, 3]]],
+       [3, [[0, 1], [1, 2], [2, 0]]], [4, [[0, 1], [1, 2], [2, 3]]]], ref_valid_tree),
+]
+
 for p in problems:
-    if p["function_signature"]["name"] in ("max_depth", "invert_tree"):
+    if p["function_signature"]["name"] in ("max_depth", "invert_tree", "is_same_tree", "level_order"):
         p["starter_code"] = p["starter_code"].replace("# Write your solution here", "# TreeNode(val, left, right) is already defined for you.")
+    if p["function_signature"]["name"] in ("reverse_list", "merge_two_lists"):
+        p["starter_code"] = p["starter_code"].replace("# Write your solution here", "# ListNode(val, next) is already defined for you.")
 
 # ---------------------------------------------------------------------------
 # Performance tests: inputs at the size the constraints allow, so a correct-but-brute-force solution fails on TIME,
@@ -427,6 +511,16 @@ PERF = {
     "invert-binary-tree": dict(constraints=["`0 <= number of nodes <= 10**4`"], tests=[
         dict(args=[g("skewed_tree", n=1500)], label="Very deep tree (1,500 levels)"),
         dict(args=[g("range", start=1, stop=4096)], label="Full tree with 4,095 nodes")]),
+    # Both graph problems are solved in one pass over the nodes and edges. Looking through the whole edge list again for every node does
+    # not finish in time at this size.
+    "number-of-connected-components-in-an-undirected-graph": dict(constraints=["`1 <= n <= 2 * 10**4`", "`0 <= len(edges) <= 2 * 10**4`", "`0 <= a, b < n` and `a != b`", "There are no repeated edges."], tests=[
+        dict(args=[20000, g("random_edges", n=20000, m=10000, seed=21)], label="20,000 nodes and 10,000 edges"),
+        dict(args=[15000, g("random_edges", n=15000, m=12000, seed=22)], label="15,000 nodes and 12,000 edges")]),
+    "graph-valid-tree": dict(constraints=["`1 <= n <= 2 * 10**4`", "`0 <= len(edges) <= 2 * 10**4`", "`0 <= a, b < n` and `a != b`", "There are no repeated edges."], tests=[
+        dict(args=[20000, g("random_tree_edges", n=20000, seed=23)], expected_spec=True, label="20,000 nodes joined into one tree"),
+        dict(args=[20000, g("concat", parts=[g("random_tree_edges", n=20000, seed=23), [[0, 19999]]])], expected_spec=False,
+             label="20,000 nodes, one edge too many"),
+        dict(args=[20000, g("random_tree_edges", n=10000, seed=24)], expected_spec=False, label="20,000 nodes, only 10,000 of them connected")]),
 }
 
 for p in problems:
@@ -459,7 +553,7 @@ def slug(t):
     return out.strip("-")
 
 pf_topics = ["Variables and data types", "Conditions", "Loops", "Functions", "Strings", "Lists", "Dictionaries", "Basic programming logic"]
-dsa_topics = ["Arrays", "Hash maps", "Two pointers", "Sliding window", "Stacks", "Binary search", "Recursion", "Trees"]
+dsa_topics = ["Arrays", "Hash maps", "Two pointers", "Sliding window", "Stacks", "Binary search", "Recursion", "Linked lists", "Trees", "Graphs"]
 by_topic = lambda ts, ids: [{"name": t, "problems": [p["id"] for p in problems if p["topic"] == t and p["id"] in ids]} for t in ts]
 pf_ids = {p["id"] for p in problems[:12]}
 dsa_ids = {p["id"] for p in problems[12:]}
@@ -521,7 +615,7 @@ roadmaps = [
      "description": "Start from zero. Learn Python syntax, control flow, functions and the core data types by solving small, focused problems.",
      "topics": by_topic(pf_topics, pf_ids)},
     {"id": "dsa-fundamentals", "title": "DSA Fundamentals", "difficulty": "Intermediate",
-     "description": "Learn the core data structures and algorithmic patterns: hash maps, two pointers, sliding window, stacks, binary search, recursion and trees.",
+     "description": "Learn the core data structures and algorithmic patterns: hash maps, two pointers, sliding window, stacks, binary search, recursion, linked lists, trees and graphs.",
      "topics": by_topic(dsa_topics, dsa_ids)},
     {"id": "blind-75", "title": "Blind 75", "difficulty": "Advanced",
      "description": "The widely used 75-problem interview preparation list, grouped by category. Practise explaining trade-offs, edge cases and complexity.",

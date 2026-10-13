@@ -137,3 +137,19 @@ def test_trace_captures_stdout_and_restores_state(h):
     assert "hello" in t["stdout"] and builtins.len is not None
     import sys
     assert sys.gettrace() is None
+
+
+# ---- a student's own experiments (no expected answer) ----------------------------
+def test_unchecked_case_shows_the_output_and_judges_nothing(h):
+    p = problem("two-sum")
+    tests = [{"id": -1, "args": [[3, 3], 6], "expected": None, "unchecked": True}]
+    res = json.loads(h["run_payload"](json.dumps({"code": TWO_SUM, "signature": p["function_signature"], "tests": tests, "comparison": p["comparison"]})))
+    case = res["cases"][0]
+    assert case["actual"] == "[0, 1]" and case["passed"] is True and case["error"] is None and case["expected"] == ""
+
+
+def test_unchecked_case_still_reports_errors(h):
+    p = problem("two-sum")
+    tests = [{"id": -1, "args": [[1], 2], "expected": None, "unchecked": True}]
+    res = json.loads(h["run_payload"](json.dumps({"code": "def two_sum(nums, target):\n    return nums[5]\n", "signature": p["function_signature"], "tests": tests, "comparison": "exact"})))
+    assert "IndexError" in res["cases"][0]["error"] and res["cases"][0]["passed"] is False

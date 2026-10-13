@@ -1,0 +1,203 @@
+{
+  "id": "number-of-connected-components-in-an-undirected-graph",
+  "title": "Number of Connected Components in an Undirected Graph",
+  "difficulty": "Medium",
+  "topic": "Graphs",
+  "description": "You have a graph of `n` nodes labelled `0` to `n - 1`, and a list `edges` where `edges[i] = [a, b]` means there is an undirected edge between nodes `a` and `b`.\n\nReturn the number of **connected components** in the graph: groups of nodes that can reach each other along edges. A node with no edges is a component of its own.",
+  "function_signature": {
+    "name": "count_components",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      },
+      {
+        "name": "edges",
+        "type": "List[List[int]]"
+      }
+    ],
+    "return_type": "int"
+  },
+  "starter_code": "from typing import List\n\n\ndef count_components(n: int, edges: List[List[int]]) -> int:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "n = 5, edges = [[0, 1], [1, 2], [3, 4]]",
+      "output": "2",
+      "explanation": "Nodes 0, 1, 2 are one component and nodes 3, 4 are another."
+    },
+    {
+      "input": "n = 5, edges = [[0, 1], [1, 2], [2, 3], [3, 4]]",
+      "output": "1"
+    }
+  ],
+  "constraints": [
+    "`1 <= n <= 2 * 10**4`",
+    "`0 <= len(edges) <= 2 * 10**4`",
+    "`0 <= a, b < n` and `a != b`",
+    "There are no repeated edges."
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        5,
+        [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "expected": 2
+    },
+    {
+      "id": 2,
+      "args": [
+        5,
+        [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "expected": 1
+    },
+    {
+      "id": 3,
+      "args": [
+        1,
+        []
+      ],
+      "expected": 1
+    },
+    {
+      "id": 4,
+      "args": [
+        4,
+        []
+      ],
+      "expected": 4
+    },
+    {
+      "id": 5,
+      "args": [
+        6,
+        [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            5
+          ]
+        ]
+      ],
+      "expected": 3
+    },
+    {
+      "id": 6,
+      "args": [
+        5,
+        [
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "expected": 1
+    },
+    {
+      "id": 7,
+      "args": [
+        4,
+        [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ]
+        ]
+      ],
+      "expected": 2
+    },
+    {
+      "id": 8,
+      "args": [
+        20000,
+        {
+          "$gen": "random_edges",
+          "n": 20000,
+          "m": 10000,
+          "seed": 21
+        }
+      ],
+      "expected": 10000,
+      "perf": true,
+      "label": "20,000 nodes and 10,000 edges",
+      "time_limit_ms": 1000
+    },
+    {
+      "id": 9,
+      "args": [
+        15000,
+        {
+          "$gen": "random_edges",
+          "n": 15000,
+          "m": 12000,
+          "seed": 22
+        }
+      ],
+      "expected": 3774,
+      "perf": true,
+      "label": "15,000 nodes and 12,000 edges",
+      "time_limit_ms": 1000
+    }
+  ]
+}

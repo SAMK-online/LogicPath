@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { trace } from '../test/fixtures'
 import {
-  captionAt, changedVars, compactTrace, fmt, fromJson, inferViews, kindOfSnap, MAX_COMPACT_STEPS, parseSpec, varKinds, type Snap, type Trace,
+  captionAt, changedVars, compactTrace, fmt, fromJson, graphEdges, inferViews, isGraphVar, kindOfSnap, looksLikeEdges, MAX_COMPACT_STEPS, parseSpec, varKinds, type Snap, type Trace,
 } from './trace'
 
 describe('formatting and conversion', () => {
@@ -126,5 +126,39 @@ describe('snapshots stay plain data', () => {
   it('survives a JSON round trip', () => {
     const s: Snap = { t: 'dict', n: 1, v: [['a', { t: 'list', n: 1, v: [1] }]] }
     expect(JSON.parse(JSON.stringify(s))).toEqual(s)
+  })
+})
+
+describe('linked lists and graphs', () => {
+  const list = (...v: Snap[]): Snap => ({ t: 'list', n: v.length, v })
+  const linked = (...v: Snap[]): Snap => ({ t: 'linked', n: v.length, v })
+  const step = (locals: Record<string, Snap>) => ({ line: 1, event: 'line' as const, depth: 1, locals })
+
+  it('formats and converts linked lists', () => {
+    expect(fmt(linked(1, 2, 3))).toBe('1 → 2 → 3')
+    expect(fmt({ t: 'linked', n: 2, v: [1, 2], more: true })).toBe('1 → 2 → …')
+    expect(fromJson([1, 2], 'Optional[ListNode]')).toEqual(linked(1, 2))
+    expect(kindOfSnap(linked(1))).toBe('linked')
+  })
+
+  it('draws a linked-list variable as a list view', () => {
+    const t: Trace = { ...trace, args: ['head'], steps: [step({ head: linked(1, 2), prev: null })] }
+    expect(inferViews(t).find((v) => v.var === 'head')?.kind).toBe('list')
+  })
+
+  it('recognises edge lists and adjacency structures as graphs', () => {
+    expect(looksLikeEdges(list(list(0, 1), list(1, 2)))).toBe(true)
+    expect(looksLikeEdges(list(list(0, 1, 2)))).toBe(false)
+    expect(isGraphVar('edges', list())).toBe(true) // an empty edge list is still a graph, by its name
+    expect(isGraphVar('nums', list(1, 2))).toBe(false)
+    expect(isGraphVar('adj', { t: 'dict', n: 1, v: [[0, list(1)]] })).toBe(true)
+    const t: Trace = { ...trace, args: ['n', 'edges'], steps: [step({ n: 4, edges: list(list(0, 1), list(2, 3)), node: 2, count: 0 })] }
+    expect(inferViews(t).find((v) => v.var === 'edges')).toMatchObject({ kind: 'graph', pointers: ['node'] })
+  })
+
+  it('reads edges from each representation', () => {
+    expect(graphEdges(list(list(0, 1), list(1, 2)), false)).toEqual([[0, 1], [1, 2]])
+    expect(graphEdges({ t: 'dict', n: 2, v: [[0, list(1)], [1, list(0, 2)]] }, true)).toEqual([[0, 1], [1, 2]])
+    expect(graphEdges(list(list(1), list(0, 2), list(1)), true)).toEqual([[0, 1], [1, 2]])
   })
 })

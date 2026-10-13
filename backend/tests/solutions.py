@@ -51,3 +51,26 @@ BRUTE = {
     "maximum-depth-of-binary-tree": "def max_depth(root):\n    if root is None:\n        return 0\n    return 1 + max(max_depth(root.left), max_depth(root.right))\n",
     "invert-binary-tree": "def invert_tree(root):\n    if root:\n        root.left, root.right = invert_tree(root.right), invert_tree(root.left)\n    return root\n",
 }
+
+
+# ---- graphs ------------------------------------------------------------------------------------------------------
+OPTIMAL.update({
+    "number-of-connected-components-in-an-undirected-graph": (
+        "def count_components(n, edges):\n    adj = [[] for _ in range(n)]\n    for a, b in edges:\n        adj[a].append(b)\n        adj[b].append(a)\n"
+        "    seen = [False] * n\n    count = 0\n    for s in range(n):\n        if seen[s]:\n            continue\n        count += 1\n        seen[s] = True\n        stack = [s]\n"
+        "        while stack:\n            u = stack.pop()\n            for v in adj[u]:\n                if not seen[v]:\n                    seen[v] = True\n                    stack.append(v)\n    return count\n"),
+    "graph-valid-tree": (
+        "def valid_tree(n, edges):\n    if len(edges) != n - 1:\n        return False\n    parent = list(range(n))\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n"
+        "    for a, b in edges:\n        ra, rb = find(a), find(b)\n        if ra == rb:\n            return False\n        parent[ra] = rb\n    return True\n"),
+})
+
+# What a student writes first: look through the whole edge list every time a node needs its neighbours.
+_SCAN = ("    seen = {0}\n    stack = [0]\n    while stack:\n        u = stack.pop()\n        for a, b in edges:\n            if a == u and b not in seen:\n                seen.add(b)\n                stack.append(b)\n"
+         "            elif b == u and a not in seen:\n                seen.add(a)\n                stack.append(a)\n")
+BRUTE.update({
+    "number-of-connected-components-in-an-undirected-graph": (
+        "def count_components(n, edges):\n    seen = set()\n    count = 0\n    for s in range(n):\n        if s in seen:\n            continue\n        count += 1\n        seen.add(s)\n        stack = [s]\n"
+        "        while stack:\n            u = stack.pop()\n            for a, b in edges:\n                if a == u and b not in seen:\n                    seen.add(b)\n                    stack.append(b)\n"
+        "                elif b == u and a not in seen:\n                    seen.add(a)\n                    stack.append(a)\n    return count\n"),
+    "graph-valid-tree": "def valid_tree(n, edges):\n    if len(edges) != n - 1:\n        return False\n" + _SCAN + "    return len(seen) == n\n",
+})

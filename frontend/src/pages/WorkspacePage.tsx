@@ -1,16 +1,18 @@
-import { lazy, Suspense, useEffect, useState, useSyncExternalStore, type CSSProperties } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { Splitter, useStoredNumber } from '../components/Splitter'
+import { CustomCasesPanel } from '../components/workspace/CustomCasesPanel'
 import { EditorPanel } from '../components/workspace/EditorPanel'
 import { ProblemPanel } from '../components/workspace/ProblemPanel'
 import { TestResultsPanel } from '../components/workspace/TestResultsPanel'
 import { TutorPanel } from '../components/workspace/TutorPanel'
 import { DifficultyBadge, ErrorNotice, Skeleton } from '../components/ui'
+import { useCustomCases } from '../hooks/useCustomCases'
 import { useWorkspace } from '../hooks/useWorkspace'
 import { getPythonRunner } from '../services/pythonRunner'
 
 type Tab = 'problem' | 'code' | 'tutor'
-type BottomTab = 'results' | 'visualize'
+type BottomTab = 'results' | 'custom' | 'visualize'
 // The visualizer is only needed when opened, so keep it (and its renderers) out of the main bundle.
 const VisualizerPanel = lazy(() => import('../components/visualizer/VisualizerPanel'))
 
@@ -41,6 +43,12 @@ export function WorkspacePage() {
   const [bottomH, setBottomH, resetBottomH] = useStoredNumber('sdt.layout.bottom', 300, 140, 640)
   const runner = getPythonRunner()
   const runtime = useSyncExternalStore((cb) => runner.subscribe(cb), () => runner.state)
+  // Experimental cases: memory only, never saved or counted. They read the latest editor text at the moment of a run.
+  const codeNow = useRef('')
+  codeNow.current = ws.code
+  const getCode = useCallback(() => codeNow.current, [])
+  const custom = useCustomCases(ws.problem, runner, getCode)
+  const [vizFocus, setVizFocus] = useState<{ id: number; n: number } | null>(null)
 
   // Warn before leaving with unsaved edits.
   const dirty = ws.saveState === 'dirty' || ws.saveState === 'error'
@@ -96,7 +104,7 @@ export function WorkspacePage() {
         <section aria-label="Code editor" className={`${show('code')} min-h-0 min-w-0 flex-col bg-paper`}>
           <div className="min-h-0 flex-1">
             <EditorPanel code={ws.code} onChange={ws.setCode} onSave={() => void ws.save()} onRun={() => void ws.run()}
-              saveState={ws.saveState} running={ws.running} saveError={ws.saveError} highlightLine={highlightLine} />
+              saveState={ws.saveState} running={ws.running || custom.running} saveError={ws.saveError} highlightLine={highlightLine} />
           </div>
           {showResults && (
             <Splitter orientation="horizontal" label="Resize output panel" value={bottomH} min={140} max={640} invert onChange={setBottomH} onReset={resetBottomH} />
@@ -104,7 +112,7 @@ export function WorkspacePage() {
           <div className="flex min-h-0 shrink-0 flex-col bg-white" style={showResults ? { height: bottomH, maxHeight: '75%' } : undefined}>
             <div className="flex shrink-0 items-center justify-between border-t border-line pr-2">
               <div role="tablist" aria-label="Output" className="flex">
-                {([['results', 'Test results'], ['visualize', 'Visualize']] as const).map(([id, label]) => (
+                {([['results', 'Test results'], ['custom', 'Try your own'], ['visualize', 'Visualize']] as const).map(([id, label]) => (
                   <button key={id} role="tab" aria-selected={bottom === id} onClick={() => { setBottom(id); setShowResults(true) }}
                     className={`px-4 py-2 text-sm font-medium transition-colors ${bottom === id ? 'border-b-2 border-copper text-navy' : 'border-b-2 border-transparent text-slate-muted hover:text-navy'}`}>{label}</button>
                 ))}
@@ -116,10 +124,13 @@ export function WorkspacePage() {
               <div className="scroll-quiet min-h-0 flex-1 overflow-y-auto">
                 {bottom === 'results' ? (
                   <TestResultsPanel result={ws.runResult} running={ws.running} notice={ws.runNotice} runtime={runtime} constraints={ws.problem.constraints} />
+                ) : bottom === 'custom' ? (
+                  <CustomCasesPanel problem={ws.problem} custom={custom} busy={ws.running}
+                    onVisualize={(id) => { setVizFocus({ id, n: Date.now() }); setBottom('visualize') }} />
                 ) : (
                   <Suspense fallback={<div className="space-y-2 p-4"><Skeleton className="h-8 w-64" /><Skeleton className="h-24" /></div>}>
                     <VisualizerPanel problem={ws.problem} code={ws.code} savedCode={ws.savedCode} sessionId={ws.session.id} runner={runner}
-                      onHighlightLine={setHighlightLine} onSynced={ws.markSaved} />
+                      onHighlightLine={setHighlightLine} onSynced={ws.markSaved} extraCases={custom.cases} focus={vizFocus} onFocusHandled={() => setVizFocus(null)} />
                   </Suspense>
                 )}
               </div>

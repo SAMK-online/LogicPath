@@ -1,0 +1,144 @@
+{
+  "id": "merge-two-sorted-lists",
+  "title": "Merge Two Sorted Lists",
+  "difficulty": "Easy",
+  "topic": "Linked lists",
+  "description": "You are given the heads of two sorted linked lists, `list1` and `list2`. Merge them into one sorted list by splicing together the nodes of the two lists, and return the head of the merged list.\n\nA `ListNode` class with `val` and `next` is provided for you. In the examples below, a list is written as a Python list of its values, from the head to the tail.",
+  "function_signature": {
+    "name": "merge_two_lists",
+    "params": [
+      {
+        "name": "list1",
+        "type": "Optional[ListNode]"
+      },
+      {
+        "name": "list2",
+        "type": "Optional[ListNode]"
+      }
+    ],
+    "return_type": "Optional[ListNode]"
+  },
+  "starter_code": "from typing import List, Optional\n\n\ndef merge_two_lists(list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:\n    # ListNode(val, next) is already defined for you.\n    pass\n",
+  "examples": [
+    {
+      "input": "list1 = [1, 2, 4], list2 = [1, 3, 4]",
+      "output": "[1, 1, 2, 3, 4, 4]"
+    },
+    {
+      "input": "list1 = [], list2 = [0]",
+      "output": "[0]"
+    }
+  ],
+  "constraints": [
+    "`0 <= number of nodes in each list <= 50`",
+    "`-100 <= Node.val <= 100`",
+    "Both lists are sorted in non-decreasing order."
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        [
+          1,
+          2,
+          4
+        ],
+        [
+          1,
+          3,
+          4
+        ]
+      ],
+      "expected": [
+        1,
+        1,
+        2,
+        3,
+        4,
+        4
+      ]
+    },
+    {
+      "id": 2,
+      "args": [
+        [],
+        []
+      ],
+      "expected": []
+    },
+    {
+      "id": 3,
+      "args": [
+        [],
+        [
+          0
+        ]
+      ],
+      "expected": [
+        0
+      ]
+    },
+    {
+      "id": 4,
+      "args": [
+        [
+          5
+        ],
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expected": [
+        1,
+        2,
+        3,
+        5
+      ]
+    },
+    {
+      "id": 5,
+      "args": [
+        [
+          1,
+          3,
+          5
+        ],
+        [
+          2,
+          4,
+          6
+        ]
+      ],
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "id": 6,
+      "args": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected": [
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  ]
+}

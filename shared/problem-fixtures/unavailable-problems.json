@@ -203,20 +203,6 @@
     "premium": true
   },
   {
-    "id": "graph-valid-tree",
-    "title": "Graph Valid Tree",
-    "difficulty": "Medium",
-    "topic": "Graph",
-    "premium": true
-  },
-  {
-    "id": "number-of-connected-components-in-an-undirected-graph",
-    "title": "Number of Connected Components in an Undirected Graph",
-    "difficulty": "Medium",
-    "topic": "Graph",
-    "premium": true
-  },
-  {
     "id": "insert-interval",
     "title": "Insert Interval",
     "difficulty": "Medium",
@@ -252,22 +238,8 @@
     "premium": true
   },
   {
-    "id": "reverse-linked-list",
-    "title": "Reverse Linked List",
-    "difficulty": "Easy",
-    "topic": "Linked List",
-    "premium": false
-  },
-  {
     "id": "linked-list-cycle",
     "title": "Linked List Cycle",
-    "difficulty": "Easy",
-    "topic": "Linked List",
-    "premium": false
-  },
-  {
-    "id": "merge-two-sorted-lists",
-    "title": "Merge Two Sorted Lists",
     "difficulty": "Easy",
     "topic": "Linked List",
     "premium": false
@@ -371,23 +343,9 @@
     "premium": true
   },
   {
-    "id": "same-tree",
-    "title": "Same Tree",
-    "difficulty": "Easy",
-    "topic": "Tree",
-    "premium": false
-  },
-  {
     "id": "binary-tree-maximum-path-sum",
     "title": "Binary Tree Maximum Path Sum",
     "difficulty": "Hard",
-    "topic": "Tree",
-    "premium": false
-  },
-  {
-    "id": "binary-tree-level-order-traversal",
-    "title": "Binary Tree Level Order Traversal",
-    "difficulty": "Medium",
     "topic": "Tree",
     "premium": false
   },

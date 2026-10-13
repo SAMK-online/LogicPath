@@ -83,3 +83,9 @@ html { scroll-behavior: smooth; }
   .reveal-word, .rise { animation: none; opacity: 1; filter: none; transform: none; }
   .flag, .rule-draw { animation: none; }
 }
+
+/* Visualizer scene: pointers slide between cells and a swap is drawn as an arc. Both are static under reduced motion. */
+.array-pointer { transition: transform 0.4s ease; }
+.array-swap { stroke-dasharray: 100; animation: array-swap-draw 0.5s ease-out both; }
+@keyframes array-swap-draw { from { stroke-dashoffset: 100; opacity: 0.3; } to { stroke-dashoffset: 0; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .array-pointer { transition: none; } .array-swap { animation: none; } }

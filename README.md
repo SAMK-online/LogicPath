@@ -13,11 +13,11 @@
 The screenshot above is a real session. The nested-loop Two Sum passes six small tests and fails the 20,000-number one. The tutor does not name the fix. It says the logic is right and asks how many comparisons that loop makes at that size.
 
 - **A tutor that asks.** Replies are questions and hints, never the finished function. Hints have five levels, chosen by the server, from a question about the core idea up to a specific hint with no code. A leak guard blocks any reply that contains the solution.
-- **Tests that stop brute force.** 18 of the 23 problems include tests at the largest size the constraints allow, each with a time limit. Binary Search is checked by how many items your code looks at, since a linear scan is still fast on a million numbers.
+- **Tests that stop brute force.** 20 of the 29 problems include tests at the largest size the constraints allow, each with a time limit. Binary Search is checked by how many items your code looks at, since a linear scan is still fast on a million numbers.
 - **A finish line.** Once every test passes, the tutor stops probing and asks you for the time and space complexity, then closes.
 - **Code runs in your browser.** Python runs in Pyodide in a Web Worker. Nothing you run executes on the server.
 - **A visualizer.** Pick a test case and step through your code line by line while variables, lists, dictionaries and trees update. An AI view adds captions that explain each step.
-- **Three roadmaps.** Python Foundations (12 problems), DSA Fundamentals (11) and Blind 75 (75 listed, 8 playable so far). Progress, resume and saved code carry across sessions.
+- **Three roadmaps.** Python Foundations (12 problems), DSA Fundamentals (17) and Blind 75 (75 listed, 14 playable so far). Progress, resume and saved code carry across sessions.
 
 ![Dashboard](docs/screenshots/dashboard.png)
 
@@ -25,7 +25,7 @@ The screenshot above is a real session. The nested-loop Two Sum passes six small
 
 - Python only.
 - The tutor is an AI model and can be wrong. Your tests are the source of truth.
-- Blind 75 is partly built: 8 of 75 problems are playable.
+- Blind 75 is partly built: 14 of 75 problems are playable.
 - The first run downloads the Python runtime, which takes a few seconds.
 - Five beginner problems have no speed tests, because they are constant or linear by nature.
 - Speed tests are timed in your browser, so timings vary a little by machine.
@@ -63,7 +63,7 @@ pip install -r requirements-dev.txt
 alembic upgrade head                 # creates backend/data/socratic.db
 uvicorn app.main:app --port 8100 --reload
 ```
-The catalog (3 roadmaps, 23 playable problems, the 75-problem Blind 75 list) is seeded idempotently on startup from `shared/problem-fixtures/`. API docs: http://127.0.0.1:8100/api/docs (disabled when `ENV=production`).
+The catalog (3 roadmaps, 29 playable problems, the 75-problem Blind 75 list) is seeded idempotently on startup from `shared/problem-fixtures/`. API docs: http://127.0.0.1:8100/api/docs (disabled when `ENV=production`).
 
 **Frontend** (port 5180)
 ```bash
@@ -94,7 +94,7 @@ React (Monaco, Pyodide worker)  --REST/JSON-->  FastAPI  -->  SQLite
 
 ### Landing page and design system
 
-Signed-out visitors see a landing page at `/`; signed-in users see their dashboard there. The page shows a real example session (code, a failing speed test, the tutor's question) and states the limits plainly: Python only, the tutor is an AI that can be wrong, Blind 75 is 8 of 75 problems so far. Design choices: IBM Plex Sans and Plex Mono for the interface, and Newsreader italic *only* for the tutor's voice so it is always clear who is speaking; copper is used for calls to action and the tutor's rule; no all-caps labels.
+Signed-out visitors see a landing page at `/`; signed-in users see their dashboard there. The page shows a real example session (code, a failing speed test, the tutor's question) and states the limits plainly: Python only, the tutor is an AI that can be wrong, Blind 75 is 14 of 75 problems so far. Design choices: IBM Plex Sans and Plex Mono for the interface, and Newsreader italic *only* for the tutor's voice so it is always clear who is speaking; copper is used for calls to action and the tutor's rule; no all-caps labels.
 
 ### Student flow
 Register → log in → pick a roadmap → open a problem → write Python → **Run Code** (Pyodide runs the problem's structured test cases in a worker) → **Save** (SQLite) → ask the tutor → refresh and resume exactly where you were (code, chat, hint level, last run).
@@ -228,8 +228,8 @@ The e2e suite has two specs. `tutor.spec.ts` covers register → protected-route
 `shared/problem-fixtures/` is the single source of truth. `python scripts/build_fixtures.py` regenerates it; expected outputs are **computed from reference solutions that live only in that script**, never in the app or the tutor's context.
 
 - **Python Foundations:** 12 playable problems across all 8 topics (incl. FizzBuzz, Factorial, Palindrome Check, Find Maximum Element, Reverse a String).
-- **DSA Fundamentals:** 11 playable problems across all 8 topics (incl. Two Sum, Valid Parentheses, Binary Search, Maximum Subarray, Contains Duplicate).
-- **Blind 75:** the complete 75-problem structure in 10 categories. **8 are playable** (Two Sum, Contains Duplicate, Maximum Subarray, Valid Anagram, Valid Palindrome, Valid Parentheses, Maximum Depth of Binary Tree, Invert Binary Tree). The other 67 appear in the roadmap as "Coming soon" and cannot be opened. They are catalog entries only, with no invented statements or tests.
+- **DSA Fundamentals:** 17 playable problems across all 10 topics (incl. Two Sum, Valid Parentheses, Binary Search, Reverse Linked List, Same Tree, Number of Connected Components).
+- **Blind 75:** the complete 75-problem structure in 10 categories. **14 are playable** (Two Sum, Contains Duplicate, Maximum Subarray, Valid Anagram, Valid Palindrome, Valid Parentheses, Maximum Depth of Binary Tree, Invert Binary Tree, Same Tree, Binary Tree Level Order Traversal, Reverse Linked List, Merge Two Sorted Lists, Graph Valid Tree, Number of Connected Components in an Undirected Graph). The other 61 appear in the roadmap as "Coming soon" and cannot be opened. They are catalog entries only, with no invented statements or tests.
 
 > **Assumption to verify:** the Blind 75 titles, categories and difficulty labels were reproduced from the commonly circulated list from memory, without access to a canonical source in this environment. Please check them against your preferred reference. A few entries (e.g. Alien Dictionary, Graph Valid Tree, Meeting Rooms I/II, Encode and Decode Strings) are LeetCode Premium problems.
 
