@@ -1,0 +1,73 @@
+{
+  "id": "sum-of-digits",
+  "title": "Sum of Digits",
+  "difficulty": "Easy",
+  "topic": "Loops",
+  "description": "Given a non-negative integer `n`, return the sum of its decimal digits.",
+  "function_signature": {
+    "name": "sum_of_digits",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "return_type": "int"
+  },
+  "starter_code": "def sum_of_digits(n: int) -> int:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "n = 1234",
+      "output": "10",
+      "explanation": "1 + 2 + 3 + 4 = 10"
+    }
+  ],
+  "constraints": [
+    "`0 <= n <= 10**9`"
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        0
+      ],
+      "expected": 0
+    },
+    {
+      "id": 2,
+      "args": [
+        7
+      ],
+      "expected": 7
+    },
+    {
+      "id": 3,
+      "args": [
+        1234
+      ],
+      "expected": 10
+    },
+    {
+      "id": 4,
+      "args": [
+        999
+      ],
+      "expected": 27
+    },
+    {
+      "id": 5,
+      "args": [
+        100000
+      ],
+      "expected": 1
+    },
+    {
+      "id": 6,
+      "args": [
+        909090
+      ],
+      "expected": 27
+    }
+  ]
+}

@@ -1,0 +1,254 @@
+[
+  {
+    "id": "python-foundations",
+    "title": "Python Foundations",
+    "difficulty": "Beginner",
+    "description": "Start from zero. Learn Python syntax, control flow, functions and the core data types by solving small, focused problems.",
+    "topics": [
+      {
+        "name": "Variables and data types",
+        "problems": [
+          "celsius-to-fahrenheit"
+        ]
+      },
+      {
+        "name": "Conditions",
+        "problems": [
+          "even-or-odd",
+          "leap-year"
+        ]
+      },
+      {
+        "name": "Loops",
+        "problems": [
+          "fizzbuzz",
+          "sum-of-digits"
+        ]
+      },
+      {
+        "name": "Functions",
+        "problems": [
+          "factorial"
+        ]
+      },
+      {
+        "name": "Strings",
+        "problems": [
+          "reverse-string",
+          "palindrome-check"
+        ]
+      },
+      {
+        "name": "Lists",
+        "problems": [
+          "find-maximum-element",
+          "unique-in-order"
+        ]
+      },
+      {
+        "name": "Dictionaries",
+        "problems": [
+          "word-frequency"
+        ]
+      },
+      {
+        "name": "Basic programming logic",
+        "problems": [
+          "prime-check"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dsa-fundamentals",
+    "title": "DSA Fundamentals",
+    "difficulty": "Intermediate",
+    "description": "Learn the core data structures and algorithmic patterns: hash maps, two pointers, sliding window, stacks, binary search, recursion and trees.",
+    "topics": [
+      {
+        "name": "Arrays",
+        "problems": [
+          "maximum-subarray"
+        ]
+      },
+      {
+        "name": "Hash maps",
+        "problems": [
+          "two-sum",
+          "contains-duplicate",
+          "valid-anagram"
+        ]
+      },
+      {
+        "name": "Two pointers",
+        "problems": [
+          "valid-palindrome"
+        ]
+      },
+      {
+        "name": "Sliding window",
+        "problems": [
+          "max-sum-subarray-size-k"
+        ]
+      },
+      {
+        "name": "Stacks",
+        "problems": [
+          "valid-parentheses"
+        ]
+      },
+      {
+        "name": "Binary search",
+        "problems": [
+          "binary-search"
+        ]
+      },
+      {
+        "name": "Recursion",
+        "problems": [
+          "fibonacci-number"
+        ]
+      },
+      {
+        "name": "Trees",
+        "problems": [
+          "maximum-depth-of-binary-tree",
+          "invert-binary-tree"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "blind-75",
+    "title": "Blind 75",
+    "difficulty": "Advanced",
+    "description": "The widely used 75-problem interview preparation list, grouped by category. Practise explaining trade-offs, edge cases and complexity.",
+    "topics": [
+      {
+        "name": "Array",
+        "problems": [
+          "two-sum",
+          "best-time-to-buy-and-sell-stock",
+          "contains-duplicate",
+          "product-of-array-except-self",
+          "maximum-subarray",
+          "maximum-product-subarray",
+          "find-minimum-in-rotated-sorted-array",
+          "search-in-rotated-sorted-array",
+          "3sum",
+          "container-with-most-water"
+        ]
+      },
+      {
+        "name": "Binary",
+        "problems": [
+          "sum-of-two-integers",
+          "number-of-1-bits",
+          "counting-bits",
+          "missing-number",
+          "reverse-bits"
+        ]
+      },
+      {
+        "name": "Dynamic Programming",
+        "problems": [
+          "climbing-stairs",
+          "coin-change",
+          "longest-increasing-subsequence",
+          "longest-common-subsequence",
+          "word-break",
+          "combination-sum",
+          "house-robber",
+          "house-robber-ii",
+          "decode-ways",
+          "unique-paths",
+          "jump-game"
+        ]
+      },
+      {
+        "name": "Graph",
+        "problems": [
+          "clone-graph",
+          "course-schedule",
+          "pacific-atlantic-water-flow",
+          "number-of-islands",
+          "longest-consecutive-sequence",
+          "alien-dictionary",
+          "graph-valid-tree",
+          "number-of-connected-components-in-an-undirected-graph"
+        ]
+      },
+      {
+        "name": "Interval",
+        "problems": [
+          "insert-interval",
+          "merge-intervals",
+          "non-overlapping-intervals",
+          "meeting-rooms",
+          "meeting-rooms-ii"
+        ]
+      },
+      {
+        "name": "Linked List",
+        "problems": [
+          "reverse-linked-list",
+          "linked-list-cycle",
+          "merge-two-sorted-lists",
+          "merge-k-sorted-lists",
+          "remove-nth-node-from-end-of-list",
+          "reorder-list"
+        ]
+      },
+      {
+        "name": "Matrix",
+        "problems": [
+          "set-matrix-zeroes",
+          "spiral-matrix",
+          "rotate-image",
+          "word-search"
+        ]
+      },
+      {
+        "name": "String",
+        "problems": [
+          "longest-substring-without-repeating-characters",
+          "longest-repeating-character-replacement",
+          "minimum-window-substring",
+          "valid-anagram",
+          "group-anagrams",
+          "valid-parentheses",
+          "valid-palindrome",
+          "longest-palindromic-substring",
+          "palindromic-substrings",
+          "encode-and-decode-strings"
+        ]
+      },
+      {
+        "name": "Tree",
+        "problems": [
+          "maximum-depth-of-binary-tree",
+          "same-tree",
+          "invert-binary-tree",
+          "binary-tree-maximum-path-sum",
+          "binary-tree-level-order-traversal",
+          "serialize-and-deserialize-binary-tree",
+          "subtree-of-another-tree",
+          "construct-binary-tree-from-preorder-and-inorder-traversal",
+          "validate-binary-search-tree",
+          "kth-smallest-element-in-a-bst",
+          "lowest-common-ancestor-of-a-binary-search-tree",
+          "implement-trie-prefix-tree",
+          "design-add-and-search-words-data-structure",
+          "word-search-ii"
+        ]
+      },
+      {
+        "name": "Heap",
+        "problems": [
+          "top-k-frequent-elements",
+          "find-median-from-data-stream"
+        ]
+      }
+    ]
+  }
+]

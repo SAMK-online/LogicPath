@@ -1,0 +1,77 @@
+{
+  "id": "celsius-to-fahrenheit",
+  "title": "Celsius to Fahrenheit",
+  "difficulty": "Easy",
+  "topic": "Variables and data types",
+  "description": "Write a function that converts a temperature from Celsius to Fahrenheit.\n\nThe formula is `F = C \u00d7 9 / 5 + 32`.",
+  "function_signature": {
+    "name": "celsius_to_fahrenheit",
+    "params": [
+      {
+        "name": "celsius",
+        "type": "int"
+      }
+    ],
+    "return_type": "float"
+  },
+  "starter_code": "def celsius_to_fahrenheit(celsius: int) -> float:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "celsius = 100",
+      "output": "212.0"
+    },
+    {
+      "input": "celsius = -40",
+      "output": "-40.0"
+    }
+  ],
+  "constraints": [
+    "`celsius` is a multiple of 5.",
+    "`-100 <= celsius <= 100`"
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        0
+      ],
+      "expected": 32.0
+    },
+    {
+      "id": 2,
+      "args": [
+        100
+      ],
+      "expected": 212.0
+    },
+    {
+      "id": 3,
+      "args": [
+        -40
+      ],
+      "expected": -40.0
+    },
+    {
+      "id": 4,
+      "args": [
+        20
+      ],
+      "expected": 68.0
+    },
+    {
+      "id": 5,
+      "args": [
+        25
+      ],
+      "expected": 77.0
+    },
+    {
+      "id": 6,
+      "args": [
+        -10
+      ],
+      "expected": 14.0
+    }
+  ]
+}

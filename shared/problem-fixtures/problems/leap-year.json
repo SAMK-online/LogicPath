@@ -1,0 +1,84 @@
+{
+  "id": "leap-year",
+  "title": "Leap Year",
+  "difficulty": "Easy",
+  "topic": "Conditions",
+  "description": "A year is a leap year if it is divisible by 4, **except** years divisible by 100, which are leap years only if they are also divisible by 400.\n\nReturn `True` if `year` is a leap year, otherwise `False`.",
+  "function_signature": {
+    "name": "is_leap_year",
+    "params": [
+      {
+        "name": "year",
+        "type": "int"
+      }
+    ],
+    "return_type": "bool"
+  },
+  "starter_code": "def is_leap_year(year: int) -> bool:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "year = 2024",
+      "output": "True"
+    },
+    {
+      "input": "year = 1900",
+      "output": "False",
+      "explanation": "1900 is divisible by 100 but not by 400."
+    }
+  ],
+  "constraints": [
+    "`1 <= year <= 9999`"
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        2000
+      ],
+      "expected": true
+    },
+    {
+      "id": 2,
+      "args": [
+        1900
+      ],
+      "expected": false
+    },
+    {
+      "id": 3,
+      "args": [
+        2024
+      ],
+      "expected": true
+    },
+    {
+      "id": 4,
+      "args": [
+        2023
+      ],
+      "expected": false
+    },
+    {
+      "id": 5,
+      "args": [
+        2100
+      ],
+      "expected": false
+    },
+    {
+      "id": 6,
+      "args": [
+        1600
+      ],
+      "expected": true
+    },
+    {
+      "id": 7,
+      "args": [
+        4
+      ],
+      "expected": true
+    }
+  ]
+}

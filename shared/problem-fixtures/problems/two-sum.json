@@ -1,0 +1,160 @@
+{
+  "id": "two-sum",
+  "title": "Two Sum",
+  "difficulty": "Easy",
+  "topic": "Hash maps",
+  "description": "Given a list of integers `nums` and an integer `target`, return the **indices** of the two numbers that add up to `target`.\n\nYou may assume exactly one solution exists, and you may not use the same element twice. The answer may be returned in any order.",
+  "function_signature": {
+    "name": "two_sum",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      },
+      {
+        "name": "target",
+        "type": "int"
+      }
+    ],
+    "return_type": "List[int]"
+  },
+  "starter_code": "from typing import List\n\n\ndef two_sum(nums: List[int], target: int) -> List[int]:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "nums = [2, 7, 11, 15], target = 9",
+      "output": "[0, 1]",
+      "explanation": "nums[0] + nums[1] == 9"
+    },
+    {
+      "input": "nums = [3, 2, 4], target = 6",
+      "output": "[1, 2]"
+    }
+  ],
+  "constraints": [
+    "`2 <= len(nums) <= 2 * 10**4`",
+    "`-10**9 <= nums[i] <= 10**9`",
+    "Exactly one valid answer exists."
+  ],
+  "comparison": "sorted",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        [
+          2,
+          7,
+          11,
+          15
+        ],
+        9
+      ],
+      "expected": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": 2,
+      "args": [
+        [
+          3,
+          2,
+          4
+        ],
+        6
+      ],
+      "expected": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": 3,
+      "args": [
+        [
+          3,
+          3
+        ],
+        6
+      ],
+      "expected": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": 4,
+      "args": [
+        [
+          -1,
+          -2,
+          -3,
+          -4,
+          -5
+        ],
+        -8
+      ],
+      "expected": [
+        2,
+        4
+      ]
+    },
+    {
+      "id": 5,
+      "args": [
+        [
+          0,
+          4,
+          3,
+          0
+        ],
+        0
+      ],
+      "expected": [
+        0,
+        3
+      ]
+    },
+    {
+      "id": 6,
+      "args": [
+        {
+          "$gen": "concat",
+          "parts": [
+            {
+              "$gen": "range",
+              "start": 1,
+              "stop": 2001
+            },
+            [
+              100000
+            ]
+          ]
+        },
+        101999
+      ],
+      "expected": [
+        1998,
+        2000
+      ]
+    },
+    {
+      "id": 7,
+      "args": [
+        {
+          "$gen": "shuffled_range",
+          "n": 20000,
+          "seed": 5
+        },
+        39997
+      ],
+      "expected": [
+        2539,
+        3358
+      ],
+      "perf": true,
+      "label": "20,000 numbers; the answer is the two largest",
+      "time_limit_ms": 1000
+    }
+  ]
+}

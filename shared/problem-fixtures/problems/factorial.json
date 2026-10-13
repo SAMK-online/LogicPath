@@ -1,0 +1,77 @@
+{
+  "id": "factorial",
+  "title": "Factorial",
+  "difficulty": "Easy",
+  "topic": "Functions",
+  "description": "Write a function that returns `n!` (n factorial): the product of all positive integers up to `n`. By definition `0! = 1`.",
+  "function_signature": {
+    "name": "factorial",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "return_type": "int"
+  },
+  "starter_code": "def factorial(n: int) -> int:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "n = 5",
+      "output": "120",
+      "explanation": "5 \u00d7 4 \u00d7 3 \u00d7 2 \u00d7 1 = 120"
+    },
+    {
+      "input": "n = 0",
+      "output": "1"
+    }
+  ],
+  "constraints": [
+    "`0 <= n <= 20`"
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        0
+      ],
+      "expected": 1
+    },
+    {
+      "id": 2,
+      "args": [
+        1
+      ],
+      "expected": 1
+    },
+    {
+      "id": 3,
+      "args": [
+        5
+      ],
+      "expected": 120
+    },
+    {
+      "id": 4,
+      "args": [
+        7
+      ],
+      "expected": 5040
+    },
+    {
+      "id": 5,
+      "args": [
+        10
+      ],
+      "expected": 3628800
+    },
+    {
+      "id": 6,
+      "args": [
+        20
+      ],
+      "expected": 2432902008176640000
+    }
+  ]
+}

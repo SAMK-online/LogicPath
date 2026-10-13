@@ -1,0 +1,83 @@
+{
+  "id": "reverse-string",
+  "title": "Reverse a String",
+  "difficulty": "Easy",
+  "topic": "Strings",
+  "description": "Return the string `s` reversed.",
+  "function_signature": {
+    "name": "reverse_string",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "return_type": "str"
+  },
+  "starter_code": "def reverse_string(s: str) -> str:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "s = \"hello\"",
+      "output": "\"olleh\""
+    }
+  ],
+  "constraints": [
+    "`0 <= len(s) <= 5 * 10**5`"
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        ""
+      ],
+      "expected": ""
+    },
+    {
+      "id": 2,
+      "args": [
+        "a"
+      ],
+      "expected": "a"
+    },
+    {
+      "id": 3,
+      "args": [
+        "hello"
+      ],
+      "expected": "olleh"
+    },
+    {
+      "id": 4,
+      "args": [
+        "Python 3"
+      ],
+      "expected": "3 nohtyP"
+    },
+    {
+      "id": 5,
+      "args": [
+        "abba"
+      ],
+      "expected": "abba"
+    },
+    {
+      "id": 6,
+      "args": [
+        {
+          "$gen": "repeat",
+          "of": "abcde",
+          "times": 100000
+        }
+      ],
+      "expected": {
+        "$gen": "repeat",
+        "of": "edcba",
+        "times": 100000
+      },
+      "perf": true,
+      "label": "Long string (500,000 characters)",
+      "time_limit_ms": 1000
+    }
+  ]
+}

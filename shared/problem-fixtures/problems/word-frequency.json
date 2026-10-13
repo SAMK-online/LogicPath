@@ -1,0 +1,109 @@
+{
+  "id": "word-frequency",
+  "title": "Word Frequency",
+  "difficulty": "Easy",
+  "topic": "Dictionaries",
+  "description": "Given a string `text`, return a dictionary that maps each word to the number of times it appears.\n\nWords are separated by whitespace and compared **case-insensitively** (store them lowercase).",
+  "function_signature": {
+    "name": "word_frequency",
+    "params": [
+      {
+        "name": "text",
+        "type": "str"
+      }
+    ],
+    "return_type": "dict"
+  },
+  "starter_code": "def word_frequency(text: str) -> dict:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "text = \"the cat The dog\"",
+      "output": "{\"the\": 2, \"cat\": 1, \"dog\": 1}"
+    }
+  ],
+  "constraints": [
+    "`0 <= len(text) <= 2 * 10**5`",
+    "Words are made of letters and digits."
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        ""
+      ],
+      "expected": {}
+    },
+    {
+      "id": 2,
+      "args": [
+        "a b a"
+      ],
+      "expected": {
+        "a": 2,
+        "b": 1
+      }
+    },
+    {
+      "id": 3,
+      "args": [
+        "the cat The dog"
+      ],
+      "expected": {
+        "the": 2,
+        "cat": 1,
+        "dog": 1
+      }
+    },
+    {
+      "id": 4,
+      "args": [
+        "go Go GO"
+      ],
+      "expected": {
+        "go": 3
+      }
+    },
+    {
+      "id": 5,
+      "args": [
+        "one two three"
+      ],
+      "expected": {
+        "one": 1,
+        "two": 1,
+        "three": 1
+      }
+    },
+    {
+      "id": 6,
+      "args": [
+        {
+          "$gen": "join",
+          "of": {
+            "$gen": "repeat",
+            "of": {
+              "$gen": "words",
+              "n": 1500,
+              "prefix": "w"
+            },
+            "times": 20
+          },
+          "sep": " "
+        }
+      ],
+      "expected": {
+        "$gen": "dict_const",
+        "keys": {
+          "$gen": "words",
+          "n": 1500,
+          "prefix": "w"
+        },
+        "value": 20
+      },
+      "perf": true,
+      "label": "30,000 words, 1,500 of them distinct",
+      "time_limit_ms": 1000
+    }
+  ]
+}

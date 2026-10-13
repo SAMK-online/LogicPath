@@ -1,0 +1,113 @@
+{
+  "id": "even-or-odd",
+  "title": "Even or Odd",
+  "difficulty": "Easy",
+  "topic": "Conditions",
+  "description": "Return the string `\"Even\"` if `n` is even, otherwise return `\"Odd\"`.",
+  "function_signature": {
+    "name": "even_or_odd",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "return_type": "str"
+  },
+  "starter_code": "def even_or_odd(n: int) -> str:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "n = 4",
+      "output": "\"Even\""
+    },
+    {
+      "input": "n = 7",
+      "output": "\"Odd\""
+    }
+  ],
+  "constraints": [
+    "`-10**15 <= n <= 10**15`"
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        0
+      ],
+      "expected": "Even"
+    },
+    {
+      "id": 2,
+      "args": [
+        1
+      ],
+      "expected": "Odd"
+    },
+    {
+      "id": 3,
+      "args": [
+        2
+      ],
+      "expected": "Even"
+    },
+    {
+      "id": 4,
+      "args": [
+        -3
+      ],
+      "expected": "Odd"
+    },
+    {
+      "id": 5,
+      "args": [
+        10
+      ],
+      "expected": "Even"
+    },
+    {
+      "id": 6,
+      "args": [
+        7
+      ],
+      "expected": "Odd"
+    },
+    {
+      "id": 7,
+      "args": [
+        -8
+      ],
+      "expected": "Even"
+    },
+    {
+      "id": 8,
+      "args": [
+        1000000000000000
+      ],
+      "expected": "Even",
+      "perf": true,
+      "label": "Huge value (10\u00b9\u2075)",
+      "time_limit_ms": 500
+    },
+    {
+      "id": 9,
+      "args": [
+        999999999999999
+      ],
+      "expected": "Odd",
+      "perf": true,
+      "label": "Huge odd value",
+      "time_limit_ms": 500
+    },
+    {
+      "id": 10,
+      "args": [
+        -999999999999999
+      ],
+      "expected": "Odd",
+      "perf": true,
+      "label": "Huge negative odd value",
+      "time_limit_ms": 500
+    }
+  ]
+}

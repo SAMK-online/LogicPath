@@ -1,0 +1,129 @@
+{
+  "id": "valid-anagram",
+  "title": "Valid Anagram",
+  "difficulty": "Easy",
+  "topic": "Hash maps",
+  "description": "Given two strings `s` and `t`, return `True` if `t` is an anagram of `s` (it uses exactly the same letters with the same counts), otherwise `False`.",
+  "function_signature": {
+    "name": "is_anagram",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      },
+      {
+        "name": "t",
+        "type": "str"
+      }
+    ],
+    "return_type": "bool"
+  },
+  "starter_code": "def is_anagram(s: str, t: str) -> bool:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "s = \"anagram\", t = \"nagaram\"",
+      "output": "True"
+    },
+    {
+      "input": "s = \"rat\", t = \"car\"",
+      "output": "False"
+    }
+  ],
+  "constraints": [
+    "`1 <= len(s), len(t) <= 2 * 10**5`",
+    "Both strings contain lowercase English letters."
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        "anagram",
+        "nagaram"
+      ],
+      "expected": true
+    },
+    {
+      "id": 2,
+      "args": [
+        "rat",
+        "car"
+      ],
+      "expected": false
+    },
+    {
+      "id": 3,
+      "args": [
+        "a",
+        "a"
+      ],
+      "expected": true
+    },
+    {
+      "id": 4,
+      "args": [
+        "ab",
+        "a"
+      ],
+      "expected": false
+    },
+    {
+      "id": 5,
+      "args": [
+        "aacc",
+        "ccac"
+      ],
+      "expected": false
+    },
+    {
+      "id": 6,
+      "args": [
+        {
+          "$gen": "randstr",
+          "n": 200000,
+          "alphabet": "abcdefghijklmnopqrstuvwxyz",
+          "seed": 9
+        },
+        {
+          "$gen": "shuffle",
+          "of": {
+            "$gen": "randstr",
+            "n": 200000,
+            "alphabet": "abcdefghijklmnopqrstuvwxyz",
+            "seed": 9
+          },
+          "seed": 10
+        }
+      ],
+      "expected": true,
+      "perf": true,
+      "label": "Two random 200,000-letter strings",
+      "time_limit_ms": 1000
+    },
+    {
+      "id": 7,
+      "args": [
+        {
+          "$gen": "repeat",
+          "of": "a",
+          "times": 200000
+        },
+        {
+          "$gen": "concat",
+          "parts": [
+            {
+              "$gen": "repeat",
+              "of": "a",
+              "times": 199999
+            },
+            "b"
+          ]
+        }
+      ],
+      "expected": false,
+      "perf": true,
+      "label": "200,000 letters that differ in only one place",
+      "time_limit_ms": 1000
+    }
+  ]
+}

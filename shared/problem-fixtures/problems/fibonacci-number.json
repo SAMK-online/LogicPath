@@ -1,0 +1,107 @@
+{
+  "id": "fibonacci-number",
+  "title": "Fibonacci Number",
+  "difficulty": "Easy",
+  "topic": "Recursion",
+  "description": "The Fibonacci numbers satisfy `F(0) = 0`, `F(1) = 1` and `F(n) = F(n - 1) + F(n - 2)` for `n > 1`.\n\nGiven `n`, return `F(n)`. Try to express the solution recursively.",
+  "function_signature": {
+    "name": "fib",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "return_type": "int"
+  },
+  "starter_code": "def fib(n: int) -> int:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "n = 2",
+      "output": "1",
+      "explanation": "F(2) = F(1) + F(0) = 1"
+    },
+    {
+      "input": "n = 4",
+      "output": "3"
+    }
+  ],
+  "constraints": [
+    "`0 <= n <= 70`"
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        0
+      ],
+      "expected": 0
+    },
+    {
+      "id": 2,
+      "args": [
+        1
+      ],
+      "expected": 1
+    },
+    {
+      "id": 3,
+      "args": [
+        2
+      ],
+      "expected": 1
+    },
+    {
+      "id": 4,
+      "args": [
+        4
+      ],
+      "expected": 3
+    },
+    {
+      "id": 5,
+      "args": [
+        10
+      ],
+      "expected": 55
+    },
+    {
+      "id": 6,
+      "args": [
+        20
+      ],
+      "expected": 6765
+    },
+    {
+      "id": 7,
+      "args": [
+        35
+      ],
+      "expected": 9227465,
+      "perf": true,
+      "label": "n = 35",
+      "time_limit_ms": 1000
+    },
+    {
+      "id": 8,
+      "args": [
+        40
+      ],
+      "expected": 102334155,
+      "perf": true,
+      "label": "n = 40",
+      "time_limit_ms": 1000
+    },
+    {
+      "id": 9,
+      "args": [
+        70
+      ],
+      "expected": 190392490709135,
+      "perf": true,
+      "label": "n = 70",
+      "time_limit_ms": 1000
+    }
+  ]
+}

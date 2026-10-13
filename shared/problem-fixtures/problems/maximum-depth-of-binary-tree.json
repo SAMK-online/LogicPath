@@ -1,0 +1,119 @@
+{
+  "id": "maximum-depth-of-binary-tree",
+  "title": "Maximum Depth of Binary Tree",
+  "difficulty": "Easy",
+  "topic": "Trees",
+  "description": "Given the `root` of a binary tree, return its **maximum depth**: the number of nodes along the longest path from the root down to the farthest leaf.\n\nA `TreeNode` class with `val`, `left` and `right` is provided for you. In the examples below, trees are written in level-order with `None` for a missing child.",
+  "function_signature": {
+    "name": "max_depth",
+    "params": [
+      {
+        "name": "root",
+        "type": "Optional[TreeNode]"
+      }
+    ],
+    "return_type": "int"
+  },
+  "starter_code": "from typing import List, Optional\n\n\ndef max_depth(root: Optional[TreeNode]) -> int:\n    # TreeNode(val, left, right) is already defined for you.\n    pass\n",
+  "examples": [
+    {
+      "input": "root = [3, 9, 20, None, None, 15, 7]",
+      "output": "3"
+    },
+    {
+      "input": "root = [1, None, 2]",
+      "output": "2"
+    }
+  ],
+  "constraints": [
+    "`0 <= number of nodes <= 10**4`"
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        [
+          3,
+          9,
+          20,
+          null,
+          null,
+          15,
+          7
+        ]
+      ],
+      "expected": 3
+    },
+    {
+      "id": 2,
+      "args": [
+        [
+          1,
+          null,
+          2
+        ]
+      ],
+      "expected": 2
+    },
+    {
+      "id": 3,
+      "args": [
+        []
+      ],
+      "expected": 0
+    },
+    {
+      "id": 4,
+      "args": [
+        [
+          1
+        ]
+      ],
+      "expected": 1
+    },
+    {
+      "id": 5,
+      "args": [
+        [
+          1,
+          2,
+          3,
+          4,
+          null,
+          null,
+          5,
+          6
+        ]
+      ],
+      "expected": 4
+    },
+    {
+      "id": 6,
+      "args": [
+        {
+          "$gen": "skewed_tree",
+          "n": 2000
+        }
+      ],
+      "expected": 2000,
+      "perf": true,
+      "label": "Very deep tree (2,000 levels)",
+      "time_limit_ms": 1000
+    },
+    {
+      "id": 7,
+      "args": [
+        {
+          "$gen": "range",
+          "start": 1,
+          "stop": 10001
+        }
+      ],
+      "expected": 14,
+      "perf": true,
+      "label": "Full tree with 10,000 nodes",
+      "time_limit_ms": 1000
+    }
+  ]
+}

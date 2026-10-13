@@ -1,0 +1,125 @@
+{
+  "id": "valid-palindrome",
+  "title": "Valid Palindrome",
+  "difficulty": "Easy",
+  "topic": "Two pointers",
+  "description": "A phrase is a palindrome if, after converting all uppercase letters to lowercase and removing every non-alphanumeric character, it reads the same forwards and backwards.\n\nGiven a string `s`, return `True` if it is a palindrome, otherwise `False`.",
+  "function_signature": {
+    "name": "is_palindrome",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "return_type": "bool"
+  },
+  "starter_code": "def is_palindrome(s: str) -> bool:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "s = \"A man, a plan, a canal: Panama\"",
+      "output": "True"
+    },
+    {
+      "input": "s = \"race a car\"",
+      "output": "False"
+    }
+  ],
+  "constraints": [
+    "`1 <= len(s) <= 10**6`",
+    "`s` consists of printable ASCII characters."
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        "A man, a plan, a canal: Panama"
+      ],
+      "expected": true
+    },
+    {
+      "id": 2,
+      "args": [
+        "race a car"
+      ],
+      "expected": false
+    },
+    {
+      "id": 3,
+      "args": [
+        " "
+      ],
+      "expected": true
+    },
+    {
+      "id": 4,
+      "args": [
+        "0P"
+      ],
+      "expected": false
+    },
+    {
+      "id": 5,
+      "args": [
+        "No lemon, no melon"
+      ],
+      "expected": true
+    },
+    {
+      "id": 6,
+      "args": [
+        {
+          "$gen": "concat",
+          "parts": [
+            {
+              "$gen": "repeat",
+              "of": "aB, c.",
+              "times": 30000
+            },
+            {
+              "$gen": "reversed",
+              "of": {
+                "$gen": "repeat",
+                "of": "aB, c.",
+                "times": 30000
+              }
+            }
+          ]
+        }
+      ],
+      "expected": true,
+      "perf": true,
+      "label": "Long phrase with punctuation (360,000 characters)",
+      "time_limit_ms": 1000
+    },
+    {
+      "id": 7,
+      "args": [
+        {
+          "$gen": "concat",
+          "parts": [
+            {
+              "$gen": "repeat",
+              "of": "aB, c.",
+              "times": 30000
+            },
+            "zq",
+            {
+              "$gen": "reversed",
+              "of": {
+                "$gen": "repeat",
+                "of": "aB, c.",
+                "times": 30000
+              }
+            }
+          ]
+        }
+      ],
+      "expected": false,
+      "perf": true,
+      "label": "Long phrase that is almost a palindrome",
+      "time_limit_ms": 1000
+    }
+  ]
+}

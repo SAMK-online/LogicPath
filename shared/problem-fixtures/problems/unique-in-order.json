@@ -1,0 +1,133 @@
+{
+  "id": "unique-in-order",
+  "title": "Unique in Order",
+  "difficulty": "Easy",
+  "topic": "Lists",
+  "description": "Return a new list that contains each distinct value of `nums` exactly once, keeping the order of **first appearance**.",
+  "function_signature": {
+    "name": "unique_in_order",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "return_type": "List[int]"
+  },
+  "starter_code": "from typing import List\n\n\ndef unique_in_order(nums: List[int]) -> List[int]:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "nums = [3, 1, 3, 2, 1]",
+      "output": "[3, 1, 2]"
+    }
+  ],
+  "constraints": [
+    "`0 <= len(nums) <= 5 * 10**4`"
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        []
+      ],
+      "expected": []
+    },
+    {
+      "id": 2,
+      "args": [
+        [
+          1
+        ]
+      ],
+      "expected": [
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "args": [
+        [
+          3,
+          1,
+          3,
+          2,
+          1
+        ]
+      ],
+      "expected": [
+        3,
+        1,
+        2
+      ]
+    },
+    {
+      "id": 4,
+      "args": [
+        [
+          5,
+          5,
+          5
+        ]
+      ],
+      "expected": [
+        5
+      ]
+    },
+    {
+      "id": 5,
+      "args": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expected": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "id": 6,
+      "args": [
+        {
+          "$gen": "shuffled_range",
+          "n": 30000,
+          "seed": 3
+        }
+      ],
+      "expected": {
+        "$gen": "shuffled_range",
+        "n": 30000,
+        "seed": 3
+      },
+      "perf": true,
+      "label": "30,000 distinct numbers",
+      "time_limit_ms": 1000
+    },
+    {
+      "id": 7,
+      "args": [
+        {
+          "$gen": "repeat",
+          "of": {
+            "$gen": "shuffled_range",
+            "n": 15000,
+            "seed": 4
+          },
+          "times": 2
+        }
+      ],
+      "expected": {
+        "$gen": "shuffled_range",
+        "n": 15000,
+        "seed": 4
+      },
+      "perf": true,
+      "label": "15,000 distinct numbers, each appearing twice",
+      "time_limit_ms": 1000
+    }
+  ]
+}

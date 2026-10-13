@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  /* Palette (brief): deep navy, copper, white, warm off-white, muted slate. Tints are derived from these. */
+  --color-navy: #11233b;
+  --color-navy-800: #172c47;
+  --color-navy-700: #1f3a5c;
+  --color-navy-100: #dfe5ee;
+  --color-navy-50: #eef1f6;
+  --color-copper: #b8734d;
+  --color-copper-600: #a2623f;
+  --color-copper-100: #f0dccf;
+  --color-copper-50: #f8efe9;
+  --color-paper: #f7f6f3;
+  --color-slate-muted: #64748b;
+  --color-line: #e6e3dc;
+  --color-ok: #2f7d5b;
+  --color-ok-50: #eaf5ef;
+  --color-warn: #a16207;
+  --color-warn-50: #fdf6e3;
+  --color-bad: #b42318;
+  --color-bad-50: #fdecea;
+
+  /* Sans carries the interface; the serif is reserved for the tutor's voice so it is always clear who is speaking. */
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-voice: "Newsreader", ui-serif, Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --shadow-card: 0 1px 2px rgb(17 35 59 / 0.04), 0 1px 1px rgb(17 35 59 / 0.03);
+  --shadow-raise: 0 4px 14px rgb(17 35 59 / 0.08), 0 1px 3px rgb(17 35 59 / 0.06);
+}
+
+html, body, #root { height: 100%; }
+body {
+  background: var(--color-paper);
+  color: var(--color-navy);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--color-copper-100); }
+h1, h2, h3 { text-wrap: balance; font-family: var(--font-display); letter-spacing: -0.012em; }
+h1 { letter-spacing: -0.022em; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+:focus-visible { outline: 2px solid var(--color-copper); outline-offset: 2px; border-radius: 4px; }
+
+@utility btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium transition-[background-color,border-color,box-shadow,opacity,transform] duration-150 active:translate-y-px motion-reduce:transition-none disabled:cursor-not-allowed disabled:opacity-50; }
+@utility btn-primary { @apply btn bg-navy text-white shadow-card hover:bg-navy-700 active:bg-navy-800; }
+@utility btn-accent { @apply btn bg-copper text-white shadow-card hover:bg-copper-600 active:bg-copper-600; }
+@utility btn-ghost { @apply btn border border-line bg-white text-navy shadow-card hover:border-navy-100 hover:bg-navy-50; }
+@utility input { @apply w-full rounded-lg border border-line bg-white px-3 py-2 text-sm text-navy shadow-card placeholder:text-slate-muted/80 focus:border-copper focus:outline-none focus:ring-2 focus:ring-copper/20; }
+@utility card { @apply rounded-lg border border-line bg-white shadow-card; }
+@utility label { @apply mb-1.5 block text-xs font-medium text-slate-muted; }
+@utility kbd { @apply rounded border border-line bg-paper px-1.5 py-0.5 font-mono text-[10px] font-medium text-slate-muted; }
+@utility eyebrow { @apply text-sm font-medium text-copper-600; }
+
+/* Visualizer: the line the trace is currently on (Monaco decoration). */
+.trace-line { background: rgba(184, 115, 77, 0.16); box-shadow: inset 3px 0 0 var(--color-copper); }
+
+/* Thin, quiet scrollbars inside panels. */
+.scroll-quiet { scrollbar-width: thin; scrollbar-color: var(--color-navy-100) transparent; }
+
+@keyframes shimmer { 100% { transform: translateX(100%); } }
+.skeleton { position: relative; overflow: hidden; background: var(--color-navy-50); border-radius: 8px; }
+.skeleton::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.7), transparent); animation: shimmer 1.4s infinite; }
+@media (prefers-reduced-motion: reduce) { .skeleton::after { animation: none; } }
+
+/* The tutor speaks in a serif so its questions stand apart from interface text. */
+.tutor-voice { font-family: var(--font-voice); font-size: 1.0625rem; line-height: 1.6; }
+.tutor-voice code { font-family: var(--font-mono); font-size: 0.82em; }
+
+/* Motion: used once, on the landing hero (headline, then the example session plays in order), and for answers to an action. */
+@keyframes reveal-word { from { opacity: 0; filter: blur(8px); transform: translateY(0.3em); } to { opacity: 1; filter: blur(0); transform: none; } }
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes flag { 0%, 100% { background-color: transparent; } 35% { background-color: rgb(242 184 174 / 0.22); } }
+@keyframes draw-rule { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+.reveal-word { display: inline-block; opacity: 0; animation: reveal-word 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; animation-delay: calc(var(--i, 0) * 70ms); }
+.rise { opacity: 0; animation: rise 0.45s ease-out forwards; animation-delay: var(--d, 0ms); }
+.flag { animation: flag 1.4s ease-out 1; animation-delay: var(--d, 0ms); }
+.rule-draw { transform-origin: top; animation: draw-rule 0.5s ease-out both; animation-delay: var(--d, 0ms); }
+@media (prefers-reduced-motion: reduce) {
+  .reveal-word, .rise { animation: none; opacity: 1; filter: none; transform: none; }
+  .flag, .rule-draw { animation: none; }
+}

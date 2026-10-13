@@ -1,0 +1,152 @@
+{
+  "id": "contains-duplicate",
+  "title": "Contains Duplicate",
+  "difficulty": "Easy",
+  "topic": "Hash maps",
+  "description": "Given a list of integers `nums`, return `True` if any value appears **at least twice**, and `False` if every element is distinct.",
+  "function_signature": {
+    "name": "contains_duplicate",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "return_type": "bool"
+  },
+  "starter_code": "from typing import List\n\n\ndef contains_duplicate(nums: List[int]) -> bool:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "nums = [1, 2, 3, 1]",
+      "output": "True"
+    },
+    {
+      "input": "nums = [1, 2, 3, 4]",
+      "output": "False"
+    }
+  ],
+  "constraints": [
+    "`1 <= len(nums) <= 10**5`",
+    "`-10**9 <= nums[i] <= 10**9`"
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        [
+          1,
+          2,
+          3,
+          1
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "id": 2,
+      "args": [
+        [
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "expected": false
+    },
+    {
+      "id": 3,
+      "args": [
+        [
+          1
+        ]
+      ],
+      "expected": false
+    },
+    {
+      "id": 4,
+      "args": [
+        [
+          1,
+          1,
+          1,
+          3,
+          3,
+          4,
+          3,
+          2,
+          4,
+          2
+        ]
+      ],
+      "expected": true
+    },
+    {
+      "id": 5,
+      "args": [
+        {
+          "$gen": "range",
+          "start": 0,
+          "stop": 5000
+        }
+      ],
+      "expected": false
+    },
+    {
+      "id": 6,
+      "args": [
+        {
+          "$gen": "concat",
+          "parts": [
+            {
+              "$gen": "range",
+              "start": 0,
+              "stop": 5000
+            },
+            [
+              0
+            ]
+          ]
+        }
+      ],
+      "expected": true
+    },
+    {
+      "id": 7,
+      "args": [
+        {
+          "$gen": "shuffled_range",
+          "n": 50000,
+          "seed": 6
+        }
+      ],
+      "expected": false,
+      "perf": true,
+      "label": "50,000 distinct numbers",
+      "time_limit_ms": 1000
+    },
+    {
+      "id": 8,
+      "args": [
+        {
+          "$gen": "concat",
+          "parts": [
+            {
+              "$gen": "shuffled_range",
+              "n": 50000,
+              "seed": 6
+            },
+            [
+              0
+            ]
+          ]
+        }
+      ],
+      "expected": true,
+      "perf": true,
+      "label": "50,001 numbers, one repeated",
+      "time_limit_ms": 1000
+    }
+  ]
+}

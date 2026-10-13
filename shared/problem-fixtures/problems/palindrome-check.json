@@ -1,0 +1,132 @@
+{
+  "id": "palindrome-check",
+  "title": "Palindrome Check",
+  "difficulty": "Easy",
+  "topic": "Strings",
+  "description": "Return `True` if `s` reads the same forwards and backwards, otherwise `False`.\n\nThe comparison is exact: it is case-sensitive and every character counts.",
+  "function_signature": {
+    "name": "is_palindrome",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "return_type": "bool"
+  },
+  "starter_code": "def is_palindrome(s: str) -> bool:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "s = \"racecar\"",
+      "output": "True"
+    },
+    {
+      "input": "s = \"Aba\"",
+      "output": "False",
+      "explanation": "\"A\" and \"a\" are different characters."
+    }
+  ],
+  "constraints": [
+    "`0 <= len(s) <= 10**6`"
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        "racecar"
+      ],
+      "expected": true
+    },
+    {
+      "id": 2,
+      "args": [
+        "hello"
+      ],
+      "expected": false
+    },
+    {
+      "id": 3,
+      "args": [
+        ""
+      ],
+      "expected": true
+    },
+    {
+      "id": 4,
+      "args": [
+        "abba"
+      ],
+      "expected": true
+    },
+    {
+      "id": 5,
+      "args": [
+        "Aba"
+      ],
+      "expected": false
+    },
+    {
+      "id": 6,
+      "args": [
+        "x"
+      ],
+      "expected": true
+    },
+    {
+      "id": 7,
+      "args": [
+        {
+          "$gen": "concat",
+          "parts": [
+            {
+              "$gen": "repeat",
+              "of": "abc",
+              "times": 100000
+            },
+            {
+              "$gen": "reversed",
+              "of": {
+                "$gen": "repeat",
+                "of": "abc",
+                "times": 100000
+              }
+            }
+          ]
+        }
+      ],
+      "expected": true,
+      "perf": true,
+      "label": "Long palindrome (600,000 characters)",
+      "time_limit_ms": 1000
+    },
+    {
+      "id": 8,
+      "args": [
+        {
+          "$gen": "concat",
+          "parts": [
+            {
+              "$gen": "repeat",
+              "of": "abc",
+              "times": 100000
+            },
+            "zq",
+            {
+              "$gen": "reversed",
+              "of": {
+                "$gen": "repeat",
+                "of": "abc",
+                "times": 100000
+              }
+            }
+          ]
+        }
+      ],
+      "expected": false,
+      "perf": true,
+      "label": "Long string that is almost a palindrome (600,002 characters)",
+      "time_limit_ms": 1000
+    }
+  ]
+}

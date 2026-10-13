@@ -1,0 +1,124 @@
+{
+  "id": "find-maximum-element",
+  "title": "Find Maximum Element",
+  "difficulty": "Easy",
+  "topic": "Lists",
+  "description": "Given a non-empty list of integers, return the largest one.\n\nTry to solve it with a loop before reaching for the built-in `max()`.",
+  "function_signature": {
+    "name": "find_max",
+    "params": [
+      {
+        "name": "nums",
+        "type": "List[int]"
+      }
+    ],
+    "return_type": "int"
+  },
+  "starter_code": "from typing import List\n\n\ndef find_max(nums: List[int]) -> int:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "nums = [3, 9, 2]",
+      "output": "9"
+    }
+  ],
+  "constraints": [
+    "`1 <= len(nums) <= 5 * 10**4`",
+    "`-10**6 <= nums[i] <= 10**6`"
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        [
+          5
+        ]
+      ],
+      "expected": 5
+    },
+    {
+      "id": 2,
+      "args": [
+        [
+          3,
+          9,
+          2
+        ]
+      ],
+      "expected": 9
+    },
+    {
+      "id": 3,
+      "args": [
+        [
+          -4,
+          -1,
+          -7
+        ]
+      ],
+      "expected": -1
+    },
+    {
+      "id": 4,
+      "args": [
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "expected": 1
+    },
+    {
+      "id": 5,
+      "args": [
+        [
+          0,
+          -2,
+          8,
+          8,
+          3
+        ]
+      ],
+      "expected": 8
+    },
+    {
+      "id": 6,
+      "args": [
+        {
+          "$gen": "randints",
+          "n": 30000,
+          "lo": -1000000,
+          "hi": 1000000,
+          "seed": 7
+        }
+      ],
+      "expected": 999953,
+      "perf": true,
+      "label": "30,000 numbers",
+      "time_limit_ms": 1000
+    },
+    {
+      "id": 7,
+      "args": [
+        {
+          "$gen": "concat",
+          "parts": [
+            {
+              "$gen": "const",
+              "value": 5,
+              "n": 29999
+            },
+            [
+              6
+            ]
+          ]
+        }
+      ],
+      "expected": 6,
+      "perf": true,
+      "label": "29,999 equal numbers, then one larger",
+      "time_limit_ms": 1000
+    }
+  ]
+}

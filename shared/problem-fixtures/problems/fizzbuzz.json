@@ -1,0 +1,114 @@
+{
+  "id": "fizzbuzz",
+  "title": "FizzBuzz",
+  "difficulty": "Easy",
+  "topic": "Loops",
+  "description": "Given an integer `n`, return a list of strings for the numbers `1` through `n`:\n\n- `\"FizzBuzz\"` if the number is divisible by both 3 and 5\n- `\"Fizz\"` if divisible by 3\n- `\"Buzz\"` if divisible by 5\n- otherwise the number itself as a string",
+  "function_signature": {
+    "name": "fizzbuzz",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "return_type": "List[str]"
+  },
+  "starter_code": "from typing import List\n\n\ndef fizzbuzz(n: int) -> List[str]:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "n = 5",
+      "output": "[\"1\", \"2\", \"Fizz\", \"4\", \"Buzz\"]"
+    }
+  ],
+  "constraints": [
+    "`1 <= n <= 1000`"
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        1
+      ],
+      "expected": [
+        "1"
+      ]
+    },
+    {
+      "id": 2,
+      "args": [
+        3
+      ],
+      "expected": [
+        "1",
+        "2",
+        "Fizz"
+      ]
+    },
+    {
+      "id": 3,
+      "args": [
+        5
+      ],
+      "expected": [
+        "1",
+        "2",
+        "Fizz",
+        "4",
+        "Buzz"
+      ]
+    },
+    {
+      "id": 4,
+      "args": [
+        15
+      ],
+      "expected": [
+        "1",
+        "2",
+        "Fizz",
+        "4",
+        "Buzz",
+        "Fizz",
+        "7",
+        "8",
+        "Fizz",
+        "Buzz",
+        "11",
+        "Fizz",
+        "13",
+        "14",
+        "FizzBuzz"
+      ]
+    },
+    {
+      "id": 5,
+      "args": [
+        20
+      ],
+      "expected": [
+        "1",
+        "2",
+        "Fizz",
+        "4",
+        "Buzz",
+        "Fizz",
+        "7",
+        "8",
+        "Fizz",
+        "Buzz",
+        "11",
+        "Fizz",
+        "13",
+        "14",
+        "FizzBuzz",
+        "16",
+        "17",
+        "Fizz",
+        "19",
+        "Buzz"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "id": "prime-check",
+  "title": "Prime Check",
+  "difficulty": "Easy",
+  "topic": "Basic programming logic",
+  "description": "Return `True` if `n` is a prime number, otherwise `False`.\n\nA prime is an integer greater than 1 whose only divisors are 1 and itself.",
+  "function_signature": {
+    "name": "is_prime",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "return_type": "bool"
+  },
+  "starter_code": "def is_prime(n: int) -> bool:\n    # Write your solution here\n    pass\n",
+  "examples": [
+    {
+      "input": "n = 17",
+      "output": "True"
+    },
+    {
+      "input": "n = 1",
+      "output": "False"
+    }
+  ],
+  "constraints": [
+    "`0 <= n <= 2**31 - 1`"
+  ],
+  "comparison": "exact",
+  "test_cases": [
+    {
+      "id": 1,
+      "args": [
+        0
+      ],
+      "expected": false
+    },
+    {
+      "id": 2,
+      "args": [
+        1
+      ],
+      "expected": false
+    },
+    {
+      "id": 3,
+      "args": [
+        2
+      ],
+      "expected": true
+    },
+    {
+      "id": 4,
+      "args": [
+        3
+      ],
+      "expected": true
+    },
+    {
+      "id": 5,
+      "args": [
+        4
+      ],
+      "expected": false
+    },
+    {
+      "id": 6,
+      "args": [
+        17
+      ],
+      "expected": true
+    },
+    {
+      "id": 7,
+      "args": [
+        18
+      ],
+      "expected": false
+    },
+    {
+      "id": 8,
+      "args": [
+        97
+      ],
+      "expected": true
+    },
+    {
+      "id": 9,
+      "args": [
+        100
+      ],
+      "expected": false
+    },
+    {
+      "id": 10,
+      "args": [
+        7919
+      ],
+      "expected": true
+    },
+    {
+      "id": 11,
+      "args": [
+        2147483647
+      ],
+      "expected": true,
+      "perf": true,
+      "label": "Large prime (2\u00b3\u00b9 \u2212 1)",
+      "time_limit_ms": 500
+    },
+    {
+      "id": 12,
+      "args": [
+        999999937
+      ],
+      "expected": true,
+      "perf": true,
+      "label": "Large prime near 10\u2079",
+      "time_limit_ms": 500
+    },
+    {
+      "id": 13,
+      "args": [
+        2146654199
+      ],
+      "expected": false,
+      "perf": true,
+      "label": "Large number whose only factors are big",
+      "time_limit_ms": 500
+    }
+  ]
+}
