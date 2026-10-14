@@ -23,7 +23,7 @@ export function ContainerScroll({ titleComponent, children }: { titleComponent: 
   const translate = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, -100])
 
   return (
-    <div className="relative flex h-[52rem] items-center justify-center p-2 md:h-[68rem] md:p-20" ref={ref}>
+    <div className="relative flex h-[52rem] items-center justify-center p-2 md:h-[68rem] md:p-20 xl:h-[90rem] xl:px-10" ref={ref}>
       <div className="relative w-full py-10 md:py-40" style={{ perspective: '1000px' }}>
         <Header translate={translate}>{titleComponent}</Header>
         <Card rotate={rotate} scale={scale}>{children}</Card>
@@ -34,7 +34,7 @@ export function ContainerScroll({ titleComponent, children }: { titleComponent: 
 
 function Header({ translate, children }: { translate: MotionValue<number>; children: React.ReactNode }) {
   return (
-    <motion.div style={{ translateY: translate }} className="mx-auto max-w-5xl text-center">
+    <motion.div style={{ translateY: translate }} className="mx-auto max-w-5xl text-center xl:max-w-6xl">
       {children}
     </motion.div>
   )
@@ -48,7 +48,7 @@ function Card({ rotate, scale, children }: { rotate: MotionValue<number>; scale:
         scale,
         boxShadow: '0 0 #00000066, 0 9px 20px #0000005c, 0 37px 37px #00000052, 0 84px 50px #00000038, 0 149px 60px #00000014, 0 233px 65px #00000008',
       }}
-      className="mx-auto -mt-12 h-[30rem] w-full max-w-5xl rounded-[30px] border-4 border-navy-700 bg-navy p-2 md:h-[40rem] md:p-6"
+      className="mx-auto -mt-12 h-[30rem] w-full max-w-5xl rounded-[30px] border-4 border-navy-700 bg-navy p-2 md:h-[40rem] md:p-6 xl:h-[54rem] xl:max-w-[86rem] 2xl:h-[62rem] 2xl:max-w-[96rem]"
     >
       <div className="h-full w-full overflow-hidden rounded-2xl bg-paper md:p-4">{children}</div>
     </motion.div>
